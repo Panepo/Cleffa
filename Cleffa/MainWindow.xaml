@@ -20,6 +20,6 @@
         </materialDesign:Card>
         <Button x:Name="button1" Content="Load Image" HorizontalAlignment="Left" Height="60" Margin="32,372,32,80" VerticalAlignment="Bottom" Width="350" Click="button1_Click"/>
         <Button x:Name="button2" Content="Decode" HorizontalAlignment="Right" Height="60" Margin="0,262,32,80" VerticalAlignment="Bottom" Width="350" Click="button2_Click"/>
-        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32 0 0 32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="728" />
+        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System message" Margin="32 0 0 32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="728" />
     </Grid>
 </Window>

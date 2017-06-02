@@ -31,7 +31,16 @@ namespace Cleffa
             OpenFileDialog open = new OpenFileDialog();
             if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                imageBox1.Source = new BitmapImage(new Uri(open.FileName));
+                BitmapImage image = new BitmapImage(new Uri(open.FileName));
+
+                if (image != null)
+                {
+                    imageBox1.Source = image;
+                }
+                else
+                {
+                    text1.Text = "Load image failed";
+                }
             }
         }
 
@@ -42,7 +51,7 @@ namespace Cleffa
 
             if (decoded != null)
             {
-                text1.Text = decoded;
+                text1.Text = "Decoded text: " + decoded;
             }
             else
             {
