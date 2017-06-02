@@ -36,26 +36,20 @@ namespace Cleffa
                 if (image != null)
                 {
                     imageBox1.Source = image;
+                    string decoded = App.decode(image);
+                    if (decoded != null)
+                    {
+                        text1.Text = decoded;
+                    }
+                    else
+                    {
+                        text1.Text = "Code analysis failed";
+                    }
                 }
                 else
                 {
                     text1.Text = "Load image failed";
                 }
-            }
-        }
-
-        private void button2_Click(object sender, RoutedEventArgs e)
-        {
-            BitmapImage image = (BitmapImage) imageBox1.Source;
-            String decoded = App.decode(image);
-
-            if (decoded != null)
-            {
-                text1.Text = "Decoded text: " + decoded;
-            }
-            else
-            {
-                text1.Text = "Analysis failed";
             }
         }
     }
