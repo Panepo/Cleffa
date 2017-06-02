@@ -444,3 +444,5 @@ $RECYCLE.BIN/
 
 *.exe
 test*.cs
+image/
+imageCapture/

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cleffa"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="Cleffa" Height="551.499" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -15,8 +15,11 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <materialDesign:Card Padding="32" Margin="16">
-            <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">My First Material Design App</TextBlock>
+        <materialDesign:Card Grid.Row="0" Padding="16" Margin="16,16,0,0" Height="345" HorizontalAlignment="Left" Width="744">
+            <Image x:Name="imageBox1" HorizontalAlignment="Left" Height="284" Margin="6,6,0,0" VerticalAlignment="Top" Width="683"/>
         </materialDesign:Card>
+        <Button x:Name="button1" Content="Load Image" HorizontalAlignment="Left" Height="60" Margin="32,372,32,80" VerticalAlignment="Bottom" Width="350" Click="button1_Click"/>
+        <Button x:Name="button2" Content="Decode" HorizontalAlignment="Right" Height="60" Margin="0,262,32,80" VerticalAlignment="Bottom" Width="350" Click="button2_Click"/>
+        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32 0 0 32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="728" />
     </Grid>
 </Window>
