@@ -446,3 +446,4 @@ $RECYCLE.BIN/
 test*.cs
 image/
 imageCapture/
+imageGenerate/
