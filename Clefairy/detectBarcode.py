@@ -8,7 +8,7 @@ class detectBarcode:
     def __init__(self):
         # model parameters
         self.sizeRect = (21, 7)
-        self.sizeBlur = (7, 7)
+        self.sizeBlur = (5, 5)
         self.iterErode = 10
         self.iterDilate = 35
         self.threshGrad = 225
@@ -18,8 +18,9 @@ class detectBarcode:
         
         self.claheLimit = 3.0
         self.claheGrid = (8,8)
-        self.clahe = cv2.createCLAHE(clipLimit=self.claheLimit, tileGridSize=self.claheGrid)
         
+        self.font = cv2.FONT_HERSHEY_TRIPLEX
+        self.colorRect = (0, 255, 0)
         #model flags
         self.flagConsole = 0
         self.console = ''
@@ -32,7 +33,7 @@ class detectBarcode:
                 self.ready = 1
             else:
                 self.console = 'file not found'
-                if self.flagConsole != 0:
+                if self.flagConsole is 1:
                     print(self.console)
         else:
             self.img = inpImg
@@ -40,41 +41,50 @@ class detectBarcode:
      
     def setParameter(self, para, value):
         if isinstance(value, int):
-            if para == 'sizeRect':
-                self.sizeRect = value
-            elif para == 'sizeBlur':
+            if para is 'sizeRect':
+                if len(value) is 2:
+                    if value[0] >= 1 and value[1] >= 1:
+                        self.sizeRect = value
+                    else:
+                        self.console = 'The input value should bigger than zero.'
+                        if self.flagConsole is 1:
+                            print(self.console)
+                else:
+                    self.console = 'The input data should be a matrix with length of 2.'
+                    if self.flagConsole is 1:
+                        print(self.console)
+            elif para is 'sizeBlur':
                 self.sizeBlur = value
-            elif para == 'iterErode':
+            elif para is 'iterErode':
                 self.iterErode = value
-            elif para == 'iterDilate':
+            elif para is 'iterDilate':
                 self.iterDilate = value
-            elif para == 'threshGrad':
+            elif para is 'threshGrad':
                 self.threshGrad = value
-            elif para == 'areaLimit':
+            elif para is 'areaLimit':
                 self.areaLimit = value
-            elif para == 'boxExtend':
+            elif para is 'boxExtend':
                 self.boxExtend = value
-            elif para == 'sortBar':
+            elif para is 'sortBar':
                 self.sortBar = value
-            elif para == 'claheLimit':
+            elif para is 'claheLimit':
                 self.claheLimit = value
-                self.clahe = cv2.createCLAHE(clipLimit=self.claheLimit, tileGridSize=self.claheGrid)
-            elif para == 'claheGrid':
+            elif para is 'claheGrid':
                 self.claheGrid = value
-                self.clahe = cv2.createCLAHE(clipLimit=self.claheLimit, tileGridSize=self.claheGrid)
             else:
                 self.console = 'There is not a parameter named ' + para
-                if self.flagConsole != 0:
+                if self.flagConsole is 1:
                     print(self.console)
         else:
             self.console = 'Input value type error.'
-            if self.flagConsole != 0:
+            if self.flagConsole is 1:
                 print(self.console)
              
     def genOutput(self):
-        if self.ready is 1:
+        if self.ready >= 1:
+            clahe = cv2.createCLAHE(clipLimit=self.claheLimit, tileGridSize=self.claheGrid)
             imgGray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-            imgGray = self.clahe.apply(imgGray)
+            imgGray = clahe.apply(imgGray)
 
             gradX = cv2.Sobel(imgGray, ddepth = cv2.CV_32F, dx = 0, dy = 1, ksize = -1)
             gradY = cv2.Sobel(imgGray, ddepth = cv2.CV_32F, dx = 1, dy = 0, ksize = -1)
@@ -88,37 +98,45 @@ class detectBarcode:
             closed = cv2.erode(closed, None, iterations = self.iterErode)
             closed = cv2.dilate(closed, None, iterations = self.iterDilate)
             (_, self.contours, _) = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            cv2.imshow('closed', closed)
 
             if len(self.contours) > 1:
                 self.contours = sorted(self.contours, key = cv2.contourArea, reverse = True)[:len(self.contours)]
+            
+            self.ready = 2
         else:
             self.console = 'Please set an input file.'
-            if self.flagConsole != 0:
+            if self.flagConsole is 1:
                 print(self.console)
-                
+
+    def genPaint(self):
+        if self.ready >= 2:
+            for c in self.contours:
+                rect = cv2.minAreaRect(c)
+                box = np.int0(cv2.boxPoints(rect))
+                area = cv2.contourArea(c)
+                img = cv2.drawContours(self.img, [box], -1, self.colorRect, 3)
+                textX = int(box[0][0])
+                textY = int(box[0][1] + 40)
+                cv2.putText(self.img, str(area), (textX, textY), self.font, 1, self.colorRect, 2, cv2.LINE_AA)
+        else:
+            self.console = 'Generate output first.'
+            if self.flagConsole is 1:
+                print(self.console)
+          
 if __name__ == '__main__':
     inpImg = '../image/receipt.jpg'
     img = cv2.imread(inpImg)
-    font = cv2.FONT_HERSHEY_TRIPLEX
-    colorRect = (0, 255, 0)
     
     app = detectBarcode()
     app.setInput(img)
     app.flagConsole = 1
     
     app.setParameter('iterErode', 20)
-    app.setParameter('iterDilate', 40)
+    app.setParameter('iterDilate', 20)
     app.genOutput()
+    app.genPaint()
 
-    for c in app.contours:
-        rect = cv2.minAreaRect(c)
-        box = np.int0(cv2.boxPoints(rect))
-        area = cv2.contourArea(c)
-        img = cv2.drawContours(img, [box], -1, colorRect, 3)
-        textX = int(box[0][0])
-        textY = int(box[0][1] + 40)
-        cv2.putText(img, str(area), (textX, textY), font, 1, colorRect, 2, cv2.LINE_AA)
-    
-    cv2.imshow('image', img)
+    cv2.imshow('image', app.img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
