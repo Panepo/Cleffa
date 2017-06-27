@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 import os
 from six import string_types
 
-class detectBarcode:
+class detectBarcodeSobel:
     def __init__(self):
         # model parameters
         self.sizeRect = (21, 7)
@@ -22,7 +22,7 @@ class detectBarcode:
         self.font = cv2.FONT_HERSHEY_TRIPLEX
         self.colorRect = (0, 255, 0)
         #model flags
-        self.flagConsole = 0
+        self.flagConsole = False
         self.console = ''
         self.ready = 0
         
@@ -33,7 +33,7 @@ class detectBarcode:
                 self.ready = 1
             else:
                 self.console = 'file not found'
-                if self.flagConsole is 1:
+                if self.flagConsole is True:
                     print(self.console)
         else:
             self.img = inpImg
@@ -47,14 +47,24 @@ class detectBarcode:
                         self.sizeRect = value
                     else:
                         self.console = 'The input value should bigger than zero.'
-                        if self.flagConsole is 1:
+                        if self.flagConsole is True:
                             print(self.console)
                 else:
                     self.console = 'The input data should be a matrix with length of 2.'
                     if self.flagConsole is 1:
                         print(self.console)
             elif para is 'sizeBlur':
-                self.sizeBlur = value
+                if len(value) is 2:
+                    if value[0] >= 1 and value[1] >= 1:
+                        self.sizeBlur = value
+                    else:
+                        self.console = 'The input value should bigger than zero.'
+                        if self.flagConsole is True:
+                            print(self.console)
+                else:
+                    self.console = 'The input data should be a matrix with length of 2.'
+                    if self.flagConsole is True:
+                        print(self.console)
             elif para is 'iterErode':
                 self.iterErode = value
             elif para is 'iterDilate':
@@ -73,11 +83,11 @@ class detectBarcode:
                 self.claheGrid = value
             else:
                 self.console = 'There is not a parameter named ' + para
-                if self.flagConsole is 1:
+                if self.flagConsole is True:
                     print(self.console)
         else:
             self.console = 'Input value type error.'
-            if self.flagConsole is 1:
+            if self.flagConsole is True:
                 print(self.console)
              
     def genOutput(self):
@@ -98,16 +108,17 @@ class detectBarcode:
             closed = cv2.erode(closed, None, iterations = self.iterErode)
             closed = cv2.dilate(closed, None, iterations = self.iterDilate)
             (_, self.contours, _) = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            cv2.imshow('closed', closed)
 
             if len(self.contours) > 1:
                 self.contours = sorted(self.contours, key = cv2.contourArea, reverse = True)[:len(self.contours)]
             
             self.ready = 2
+            return True
         else:
             self.console = 'Please set an input file.'
-            if self.flagConsole is 1:
-                print(self.console)
+            if self.flagConsole is True:
+                print(self.console)  
+            return False
 
     def genPaint(self):
         if self.ready >= 2:
@@ -119,24 +130,27 @@ class detectBarcode:
                 textX = int(box[0][0])
                 textY = int(box[0][1] + 40)
                 cv2.putText(self.img, str(area), (textX, textY), self.font, 1, self.colorRect, 2, cv2.LINE_AA)
+            return True
         else:
             self.console = 'Generate output first.'
-            if self.flagConsole is 1:
+            if self.flagConsole is True:
                 print(self.console)
+            return False
           
 if __name__ == '__main__':
     inpImg = '../image/receipt.jpg'
     img = cv2.imread(inpImg)
     
-    app = detectBarcode()
+    app = detectBarcodeSobel()
     app.setInput(img)
-    app.flagConsole = 1
+    app.flagConsole = True
     
     app.setParameter('iterErode', 20)
     app.setParameter('iterDilate', 20)
-    app.genOutput()
-    app.genPaint()
+    statusOut = app.genOutput()
+    statusPaint = app.genPaint()
 
-    cv2.imshow('image', app.img)
+    if statusOut is True and statusPaint is True:
+        cv2.imshow('image', app.img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
