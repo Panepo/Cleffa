@@ -8,18 +8,20 @@ using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using Emgu.CV;
 using System.Windows.Threading;
-using System.Runtime.InteropServices;
 
 namespace Cleffa
 {
     class EmguCVCamera
     {
         private Capture capture;
-        DispatcherTimer timer;
+        private DispatcherTimer timer;
 
         public EmguCVCamera(EventHandler myEventHandler)
         {
-            capture = new Capture();
+            capture = new Capture(1);
+
+            capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, 1280);
+            capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight, 720);
 
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(myEventHandler);
@@ -29,7 +31,9 @@ namespace Cleffa
         public void stopTimer()
         {
             if (timer.IsEnabled)
+            {
                 timer.Stop();
+            }
         }
 
         public void startTimer()

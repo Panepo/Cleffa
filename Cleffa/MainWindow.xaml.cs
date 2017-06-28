@@ -13,10 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.IO;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.Util;
@@ -43,6 +40,13 @@ namespace Cleffa
             {
                 text1.Text = "Code analysis successed";
                 text2.Text = decoded;
+
+                if (captureInProgress)
+                {
+                    button2.Content = "Camera Restart";
+                    webcam.stopTimer();
+                    captureInProgress = !captureInProgress;
+                }
             }
             else
             {

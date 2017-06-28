@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cleffa"
         mc:Ignorable="d"
-        Title="Cleffa" Height="560" Width="800"
+        Title="Cleffa" Height="760.597" Width="1315.821"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -15,12 +15,12 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <materialDesign:Card Grid.Row="0" Padding="16" Margin="16,16,0,0" Height="345" HorizontalAlignment="Left" Width="744">
-            <Image x:Name="imageBox1" HorizontalAlignment="Left" Height="284" Margin="6,6,0,0" VerticalAlignment="Top" Width="683"/>
+        <materialDesign:Card Grid.Row="0" Padding="16" Margin="150,16,0,10" HorizontalAlignment="Left" Width="1135" VerticalAlignment="Stretch">
+            <Image x:Name="imageBox1" Height="653" Margin="0,-11,1,0" VerticalAlignment="Top"/>
         </materialDesign:Card>
-        <Button x:Name="button1" Content="Load Image and Decode" HorizontalAlignment="Left" Height="60" Margin="32,389,0,0" VerticalAlignment="Top" Width="355" Click="button1_Click"/>
-        <TextBox x:Name="text2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="405,460,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="355" />
-        <Button x:Name="button2" Content="Video Streaming" HorizontalAlignment="Left" Height="60" Margin="405,389,0,0" Width="355" Click="button2_Click" VerticalAlignment="Top"/>
-        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System Message" HorizontalAlignment="Left" Margin="32,460,0,0" Width="355" VerticalAlignment="Top"/>
+        <Button x:Name="button1" Content="Load Image and Decode" HorizontalAlignment="Left" Height="60" Margin="32,32,0,0" VerticalAlignment="Top" Width="250" Click="button1_Click"/>
+        <TextBox x:Name="text2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32,258,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" />
+        <Button x:Name="button2" Content="Video Streaming" HorizontalAlignment="Left" Height="60" Margin="32,113,0,0" Width="250" Click="button2_Click" VerticalAlignment="Top"/>
+        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System Message" HorizontalAlignment="Left" Margin="32,196,0,0" Width="250" VerticalAlignment="Top"/>
     </Grid>
 </Window>
