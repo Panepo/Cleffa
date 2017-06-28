@@ -18,7 +18,9 @@
         <materialDesign:Card Grid.Row="0" Padding="16" Margin="16,16,0,0" Height="345" HorizontalAlignment="Left" Width="744">
             <Image x:Name="imageBox1" HorizontalAlignment="Left" Height="284" Margin="6,6,0,0" VerticalAlignment="Top" Width="683"/>
         </materialDesign:Card>
-        <Button x:Name="button1" Content="Load Image and Decode" HorizontalAlignment="Left" Height="60" Margin="32,0,0,80" VerticalAlignment="Bottom" Width="728" Click="button1_Click"/>
-        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32 0 0 32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="728" />
+        <Button x:Name="button1" Content="Load Image and Decode" HorizontalAlignment="Left" Height="60" Margin="32,389,0,0" VerticalAlignment="Top" Width="355" Click="button1_Click"/>
+        <TextBox x:Name="text2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="405,460,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="355" />
+        <Button x:Name="button2" Content="Video Streaming" HorizontalAlignment="Left" Height="60" Margin="405,389,0,0" Width="355" Click="button2_Click" VerticalAlignment="Top"/>
+        <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System Message" HorizontalAlignment="Left" Margin="32,460,0,0" Width="355" VerticalAlignment="Top"/>
     </Grid>
 </Window>
