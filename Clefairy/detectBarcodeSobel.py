@@ -8,7 +8,7 @@ class detectBarcodeSobel:
     def __init__(self):
         # model parameters
         self.sizeRect = (21, 7)
-        self.sizeBlur = (5, 5)
+        self.sizeBlur = (7, 7)
         self.iterErode = 10
         self.iterDilate = 35
         self.threshGrad = 225
@@ -123,13 +123,15 @@ class detectBarcodeSobel:
     def genPaint(self):
         if self.ready >= 2:
             for c in self.contours:
-                rect = cv2.minAreaRect(c)
-                box = np.int0(cv2.boxPoints(rect))
                 area = cv2.contourArea(c)
-                img = cv2.drawContours(self.img, [box], -1, self.colorRect, 3)
-                textX = int(box[0][0])
-                textY = int(box[0][1] + 40)
-                cv2.putText(self.img, str(area), (textX, textY), self.font, 1, self.colorRect, 2, cv2.LINE_AA)
+                
+                if area >= self.areaLimit:
+                    rect = cv2.minAreaRect(c)
+                    box = np.int0(cv2.boxPoints(rect))
+                    img = cv2.drawContours(self.img, [box], -1, self.colorRect, 3)
+                    textX = int(box[0][0])
+                    textY = int(box[0][1] + 40)
+                    cv2.putText(self.img, str(area), (textX, textY), self.font, 1, self.colorRect, 2, cv2.LINE_AA)
             return True
         else:
             self.console = 'Generate output first.'
