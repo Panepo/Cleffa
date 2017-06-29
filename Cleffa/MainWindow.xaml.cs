@@ -15,9 +15,12 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+
 using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.Util;
+
+using DirectShowLib;
 
 namespace Cleffa
 {
@@ -29,10 +32,28 @@ namespace Cleffa
         private EmguCVCamera webcam = null;
         private bool captureInProgress = false;
         private Image<Bgr, Byte> currentFrame = null;
+        private cameraDevice[] webcams;
+        private int webcamDevice = 0;
 
         public MainWindow() 
         {
-            InitializeComponent();          
+            InitializeComponent();
+
+            DsDevice[] systemCameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
+            webcams = new cameraDevice[systemCameras.Length];
+
+            for (int i = 0; i < systemCameras.Length; i++)
+            {
+                webcams[i] = new cameraDevice(i, systemCameras[i].Name, systemCameras[i].ClassID);
+                comboBox1.Items.Add(webcams[i].ToStringS());
+            }
+
+            if (comboBox1.Items.Count > 0)
+            {
+                comboBox1.SelectedIndex = 0;
+                button2.IsEnabled = true;
+            }
+
         }
 
         private void barcodeDetect(Bitmap image)
@@ -74,6 +95,7 @@ namespace Cleffa
             if (captureInProgress)
             {
                 button2.Content = "Camera Restart";
+                button3.IsEnabled = false;
                 webcam.stopTimer();
                 captureInProgress = !captureInProgress;
             }
@@ -102,7 +124,7 @@ namespace Cleffa
         {
             if (webcam == null)
             {
-                webcam = new EmguCVCamera(ProcessFrame);
+                webcam = new EmguCVCamera(webcamDevice, ProcessFrame);
             }
 
             if (captureInProgress)
@@ -114,6 +136,7 @@ namespace Cleffa
             {
                 button2.Content = "Camera Stop";
                 webcam.startTimer();
+                button3.IsEnabled = true;
             }
             captureInProgress = !captureInProgress;
         }
@@ -134,7 +157,7 @@ namespace Cleffa
                 }
 
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.FileName = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+                saveFileDialog.FileName = "Cleffa_" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
                 saveFileDialog.Filter = "PNG Image File (*.PNG)|*.PNG|All files (*.*)|*.*";
                 saveFileDialog.FilterIndex = 1;
                 if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -147,6 +170,27 @@ namespace Cleffa
                     stream.Close();
                     text1.Text = "The image was saved to your computer.";
                 }
+            }
+        }
+
+        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            webcamDevice = comboBox1.SelectedIndex;
+
+            button2.Content = "Video Streaming";
+            button3.IsEnabled = false;
+            imageBox1.Source = null;
+
+            if (captureInProgress)
+            {
+                webcam.stopTimer();
+                captureInProgress = !captureInProgress;
+            }
+
+            if (webcam != null)
+            { 
+                webcam.releaseCamera();
+                webcam = null;
             }
         }
     }
