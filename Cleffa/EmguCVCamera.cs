@@ -39,7 +39,9 @@ namespace Cleffa
         public void startTimer()
         {
             if (!timer.IsEnabled)
+            {
                 timer.Start();
+            }
         }
 
         public Image<Bgr, Byte> frameCapture()
