@@ -90,13 +90,17 @@ namespace Cleffa
 
             if (currentFrame != null)
             {
-                //imageBox1.Source = formatCoversion.ToBitmapSource(currentFrame);
-                //barcodeDetect(currentFrame.ToBitmap());
+                watch.Reset();
+                watch.Start();
+                imageBox1.Source = formatCoversion.ToBitmapSource(currentFrame);
+                barcodeDetect(currentFrame.ToBitmap());
 
-                detect.setInput(currentFrame);
+                //detect.setInput(currentFrame);
 
-                if (detect.genOutput() == true)
-                    imageBox1.Source = formatCoversion.ToBitmapSource(detect.imageGray);
+                //if (detect.genOutput() == true)
+                //    imageBox1.Source = formatCoversion.ToBitmapSource(detect.imageGray);
+                watch.Stop();
+                text3.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
             }   
         }
 
@@ -113,6 +117,8 @@ namespace Cleffa
             OpenFileDialog open = new OpenFileDialog();
             if (open.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                watch.Reset();
+                watch.Start();
                 BitmapImage input = new BitmapImage(new Uri(open.FileName));
 
                 if (input != null)
@@ -121,6 +127,8 @@ namespace Cleffa
                     currentFrame = null;
                     Bitmap image = formatCoversion.BitmapImage2Bitmap(input);
                     barcodeDetect(image);
+                    watch.Stop();
+                    text3.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
                 }
                 else
                 {

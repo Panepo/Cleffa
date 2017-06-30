@@ -19,10 +19,11 @@
             <Image x:Name="imageBox1" Height="653" Margin="0,-11,1,0" VerticalAlignment="Top"/>
         </materialDesign:Card>
         <Button x:Name="button1" Content="Load Image and Decode" HorizontalAlignment="Left" Height="60" Margin="32,32,0,0" VerticalAlignment="Top" Width="250" Click="button1_Click"/>
-        <TextBox x:Name="text2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32,391,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" />
+        <TextBox x:Name="text2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32,376,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" />
         <Button x:Name="button2" Content="Video Streaming" HorizontalAlignment="Left" Height="60" Margin="32,163,0,0" Width="250" Click="button2_Click" VerticalAlignment="Top" IsEnabled="False"/>
         <TextBox x:Name="text1" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System Message" HorizontalAlignment="Left" Margin="32,334,0,0" Width="250" VerticalAlignment="Top"/>
         <Button x:Name="button3" Content="Save Image" HorizontalAlignment="Left" Margin="32,244,0,0" VerticalAlignment="Top" Width="250" Height="60" Click="button3_Click" IsEnabled="False"/>
+        <TextBox x:Name="text3" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Process Time" HorizontalAlignment="Left" Margin="32,418,0,0" Width="250" VerticalAlignment="Top"/>
         <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Height="32" Margin="32,113,0,0" VerticalAlignment="Top" Width="250" SelectionChanged="comboBox1_SelectionChanged"/>
     </Grid>
 </Window>

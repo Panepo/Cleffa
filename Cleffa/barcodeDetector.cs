@@ -21,10 +21,10 @@ namespace Cleffa
 
         }
 
-        public void setInput(Image<Bgr, Byte> input)
-        {
-            imageInput = new Image<Bgr, Byte>(input);
-        }
+        //public void setInput(Image<Bgr, Byte> input)
+        //{
+         //   imageInput = new Image<Bgr, Byte>(input);
+        //}
 
         public bool genOutput()
         {
