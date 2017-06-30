@@ -3,6 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import os
 from six import string_types
+import imutils
+from imutils import perspective
 
 class detectBarcodeSobel:
     def __init__(self):
@@ -12,8 +14,8 @@ class detectBarcodeSobel:
         self.iterErode = 10
         self.iterDilate = 35
         self.threshGrad = 225
-        self.areaLimit = 20000
-        self.boxExtend = 20
+        self.areaLimit = 0
+        self.boxExtend = 75
         self.sortBar = 5
         
         self.claheLimit = 3.0
@@ -25,6 +27,7 @@ class detectBarcodeSobel:
         self.flagConsole = False
         self.console = ''
         self.ready = 0
+        self.imgBox = []
         
     def setInput(self, inpImg):
         if isinstance(inpImg, string_types):
@@ -94,7 +97,8 @@ class detectBarcodeSobel:
         if self.ready >= 1:
             clahe = cv2.createCLAHE(clipLimit=self.claheLimit, tileGridSize=self.claheGrid)
             imgGray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-            imgGray = clahe.apply(imgGray)
+            imgGray = cv2.blur(imgGray, (3, 3))
+            #imgGray = clahe.apply(imgGray)
 
             gradX = cv2.Sobel(imgGray, ddepth = cv2.CV_32F, dx = 0, dy = 1, ksize = -1)
             gradY = cv2.Sobel(imgGray, ddepth = cv2.CV_32F, dx = 1, dy = 0, ksize = -1)
@@ -107,7 +111,8 @@ class detectBarcodeSobel:
             closed = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
             closed = cv2.erode(closed, None, iterations = self.iterErode)
             closed = cv2.dilate(closed, None, iterations = self.iterDilate)
-            (_, self.contours, _) = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            self.imgClosed = closed.copy()
+            (_, self.contours, _) = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             if len(self.contours) > 1:
                 self.contours = sorted(self.contours, key = cv2.contourArea, reverse = True)[:len(self.contours)]
@@ -121,6 +126,7 @@ class detectBarcodeSobel:
             return False
 
     def genPaint(self):
+        imgOrig = self.img.copy()
         if self.ready >= 2:
             for c in self.contours:
                 area = cv2.contourArea(c)
@@ -128,6 +134,17 @@ class detectBarcodeSobel:
                 if area >= self.areaLimit:
                     rect = cv2.minAreaRect(c)
                     box = np.int0(cv2.boxPoints(rect))
+                    box[0][0] -= self.boxExtend
+                    box[0][1] += self.boxExtend
+                    box[1][0] -= self.boxExtend
+                    box[1][1] -= self.boxExtend
+                    box[2][0] += self.boxExtend
+                    box[2][1] -= self.boxExtend
+                    box[3][0] += self.boxExtend
+                    box[3][1] += self.boxExtend
+                    
+                    self.imgBox.append(perspective.four_point_transform(imgOrig, box.reshape(4, 2)))
+                    
                     img = cv2.drawContours(self.img, [box], -1, self.colorRect, 3)
                     textX = int(box[0][0])
                     textY = int(box[0][1] + 40)
