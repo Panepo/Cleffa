@@ -32,10 +32,11 @@ namespace Cleffa
     {
         private cameraControl webcam = null;
         private bool captureInProgress = false;
-        private Image<Bgr, Byte> currentFrame = null;
+        private Mat currentFrame = new Mat();
         private cameraDevice[] webcams;
         private int webcamDevice = 0;
         private barcodeDetector detect;
+        private barcodeIdentifier identify;
         private Stopwatch watch;
 
         public MainWindow() 
@@ -58,12 +59,15 @@ namespace Cleffa
             }
 
             detect = new barcodeDetector();
+            identify = new barcodeIdentifier();
             watch = new Stopwatch();
         }
 
         private void barcodeDetect(Bitmap image)
         {  
-            string decoded = App.decode(image);
+            identify.decode(image);
+            string decoded = identify.getResultString();
+
             if (decoded != null)
             {
                 text1.Text = "Code analysis successed";
@@ -86,19 +90,21 @@ namespace Cleffa
 
         private void ProcessFrame(object sender, EventArgs arg)
         {
-            currentFrame = webcam.frameCapture().ToImage<Bgr, Byte>();
+            currentFrame = webcam.frameCapture();
 
             if (currentFrame != null)
             {
                 watch.Reset();
                 watch.Start();
                 imageBox1.Source = formatCoversion.ToBitmapSource(currentFrame);
-                barcodeDetect(currentFrame.ToBitmap());
+                barcodeDetect(currentFrame.Bitmap);
 
                 //detect.setInput(currentFrame);
 
                 //if (detect.genOutput() == true)
                 //    imageBox1.Source = formatCoversion.ToBitmapSource(detect.imageGray);
+
+                currentFrame = null;
                 watch.Stop();
                 text3.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
             }   
@@ -134,6 +140,7 @@ namespace Cleffa
                 {
                     text1.Text = "Load image failed";
                     text2.Text = String.Empty;
+                    text3.Text = String.Empty;
                 }
             }
         }

@@ -137,6 +137,7 @@
     </Compile>
     <Compile Include="cameraDevice.cs" />
     <Compile Include="barcodeDetector.cs" />
+    <Compile Include="barcodeIdentifier.cs" />
     <Compile Include="formatCoversion.cs" />
     <Compile Include="cameraControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
