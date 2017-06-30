@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 namespace Cleffa
 {
-    class FormatCoversion
+    class formatCoversion
     {
         static public Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
         {

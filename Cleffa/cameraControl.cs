@@ -11,13 +11,13 @@ using System.Windows.Threading;
 
 namespace Cleffa
 {
-    class EmguCVCamera
+    class cameraControl
     {
         private Capture capture;
         private DispatcherTimer timer;
         public int cameraDevice = 0;
 
-        public EmguCVCamera(int webcamDevice, EventHandler myEventHandler)
+        public cameraControl(int webcamDevice, EventHandler myEventHandler)
         {
             cameraDevice = webcamDevice;
             capture = new Capture(webcamDevice);
@@ -45,9 +45,9 @@ namespace Cleffa
             }
         }
 
-        public Image<Bgr, Byte> frameCapture()
+        public Mat frameCapture()
         {
-            return capture.QueryFrame().ToImage<Bgr, Byte>();
+            return capture.QueryFrame();
         }
 
         public void setDevice(int webcamDevice, EventHandler myEventHandler)

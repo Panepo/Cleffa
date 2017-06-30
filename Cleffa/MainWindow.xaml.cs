@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+using System.Diagnostics;
 
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -29,11 +30,13 @@ namespace Cleffa
     /// </summary>
     public partial class MainWindow : Window
     {
-        private EmguCVCamera webcam = null;
+        private cameraControl webcam = null;
         private bool captureInProgress = false;
         private Image<Bgr, Byte> currentFrame = null;
         private cameraDevice[] webcams;
         private int webcamDevice = 0;
+        private barcodeDetector detect;
+        private Stopwatch watch;
 
         public MainWindow() 
         {
@@ -54,6 +57,8 @@ namespace Cleffa
                 button2.IsEnabled = true;
             }
 
+            detect = new barcodeDetector();
+            watch = new Stopwatch();
         }
 
         private void barcodeDetect(Bitmap image)
@@ -81,12 +86,17 @@ namespace Cleffa
 
         private void ProcessFrame(object sender, EventArgs arg)
         {
-            currentFrame = webcam.frameCapture();
+            currentFrame = webcam.frameCapture().ToImage<Bgr, Byte>();
 
             if (currentFrame != null)
             {
-                imageBox1.Source = FormatCoversion.ToBitmapSource(currentFrame);
-                barcodeDetect(currentFrame.ToBitmap());
+                //imageBox1.Source = formatCoversion.ToBitmapSource(currentFrame);
+                //barcodeDetect(currentFrame.ToBitmap());
+
+                detect.setInput(currentFrame);
+
+                if (detect.genOutput() == true)
+                    imageBox1.Source = formatCoversion.ToBitmapSource(detect.imageGray);
             }   
         }
 
@@ -109,7 +119,7 @@ namespace Cleffa
                 {
                     imageBox1.Source = input;
                     currentFrame = null;
-                    Bitmap image = FormatCoversion.BitmapImage2Bitmap(input);
+                    Bitmap image = formatCoversion.BitmapImage2Bitmap(input);
                     barcodeDetect(image);
                 }
                 else
@@ -124,7 +134,7 @@ namespace Cleffa
         {
             if (webcam == null)
             {
-                webcam = new EmguCVCamera(webcamDevice, ProcessFrame);
+                webcam = new cameraControl(webcamDevice, ProcessFrame);
             }
 
             if (captureInProgress)
@@ -165,7 +175,7 @@ namespace Cleffa
                     FileStream stream = new FileStream(saveFileDialog.FileName, FileMode.Create);
                     PngBitmapEncoder encoder = new PngBitmapEncoder();
                     encoder.Interlace = PngInterlaceOption.Off;
-                    encoder.Frames.Add(BitmapFrame.Create(FormatCoversion.ToBitmapSource(currentFrame)));
+                    encoder.Frames.Add(BitmapFrame.Create(formatCoversion.ToBitmapSource(currentFrame)));
                     encoder.Save(stream);
                     stream.Close();
                     text1.Text = "The image was saved to your computer.";

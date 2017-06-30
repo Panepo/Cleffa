@@ -136,8 +136,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="cameraDevice.cs" />
-    <Compile Include="FormatCoversion.cs" />
-    <Compile Include="EmguCVCamera.cs" />
+    <Compile Include="barcodeDetector.cs" />
+    <Compile Include="formatCoversion.cs" />
+    <Compile Include="cameraControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
