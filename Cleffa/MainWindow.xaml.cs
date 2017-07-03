@@ -35,7 +35,6 @@ namespace Cleffa
         private Mat currentFrame = new Mat();
         private cameraDevice[] webcams;
         private int webcamDevice = 0;
-        private barcodeDetector detect;
         private barcodeIdentifier identify;
         private Stopwatch watch;
 
@@ -49,41 +48,47 @@ namespace Cleffa
             for (int i = 0; i < systemCameras.Length; i++)
             {
                 webcams[i] = new cameraDevice(i, systemCameras[i].Name, systemCameras[i].ClassID);
-                comboBox1.Items.Add(webcams[i].ToStringS());
+                comboBoxDevice.Items.Add(webcams[i].ToStringS());
             }
 
-            if (comboBox1.Items.Count > 0)
+            if (comboBoxDevice.Items.Count > 0)
             {
-                comboBox1.SelectedIndex = 0;
-                button2.IsEnabled = true;
+                comboBoxDevice.SelectedIndex = 0;
+                buttonCamera.IsEnabled = true;
             }
 
-            detect = new barcodeDetector();
             identify = new barcodeIdentifier();
             watch = new Stopwatch();
         }
 
         private void barcodeDetect(Bitmap image)
         {  
-            identify.decode(image);
-            string decoded = identify.getResultString();
+            identify.setInputBitmap(image);
 
-            if (decoded != null)
+            if (identify.genDecode())
             {
-                text1.Text = "Code analysis successed";
-                text2.Text = decoded;
+                textSystem.Text = "Code analysis successed";
+                textBarcode.Text = identify.getResultString();
+                textType.Text = identify.getResultType();
+
+                if (identify.genPaint())
+                    imageBoxDisp.Source = identify.getResultBitmapSource();
+
 
                 if (captureInProgress)
                 {
-                    button2.Content = "Camera Restart";
+                    buttonCamera.Content = "Camera Restart";
                     webcam.stopTimer();
+                    webcam.releaseCamera();
+                    webcam = null;
                     captureInProgress = !captureInProgress;
                 }
             }
             else
             {
-                text1.Text = "Code analysis failed";
-                text2.Text = String.Empty;
+                textSystem.Text = "Code analysis failed";
+                textBarcode.Text = String.Empty;
+                textType.Text = String.Empty;
             }
 
         }
@@ -96,27 +101,26 @@ namespace Cleffa
             {
                 watch.Reset();
                 watch.Start();
-                imageBox1.Source = formatCoversion.ToBitmapSource(currentFrame);
+                imageBoxDisp.Source = formatCoversion.ToBitmapSource(currentFrame);
+
+                identify.reader.AutoRotate = false;
+                identify.reader.Options.TryHarder = false;
                 barcodeDetect(currentFrame.Bitmap);
 
-                //detect.setInput(currentFrame);
-
-                //if (detect.genOutput() == true)
-                //    imageBox1.Source = formatCoversion.ToBitmapSource(detect.imageGray);
-
-                currentFrame = null;
                 watch.Stop();
-                text3.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
+                textTime.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
             }   
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void buttonImage_Click(object sender, RoutedEventArgs e)
         {
             if (captureInProgress)
             {
-                button2.Content = "Camera Restart";
-                button3.IsEnabled = false;
+                buttonCamera.Content = "Camera Restart";
+                buttonSave.IsEnabled = false;
                 webcam.stopTimer();
+                webcam.releaseCamera();
+                webcam = null;
                 captureInProgress = !captureInProgress;
             }
 
@@ -129,23 +133,27 @@ namespace Cleffa
 
                 if (input != null)
                 {
-                    imageBox1.Source = input;
+                    imageBoxDisp.Source = input;
                     currentFrame = null;
                     Bitmap image = formatCoversion.BitmapImage2Bitmap(input);
+
+                    identify.reader.AutoRotate = true;
+                    identify.reader.Options.TryHarder = true;
                     barcodeDetect(image);
+
                     watch.Stop();
-                    text3.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
+                    textTime.Text = watch.Elapsed.TotalMilliseconds.ToString() + "ms";
                 }
                 else
                 {
-                    text1.Text = "Load image failed";
-                    text2.Text = String.Empty;
-                    text3.Text = String.Empty;
+                    textSystem.Text = "Load image failed";
+                    textBarcode.Text = String.Empty;
+                    textTime.Text = String.Empty;
                 }
             }
         }
 
-        private void button2_Click(object sender, RoutedEventArgs e)
+        private void buttonCamera_Click(object sender, RoutedEventArgs e)
         {
             if (webcam == null)
             {
@@ -153,31 +161,33 @@ namespace Cleffa
             }
 
             if (captureInProgress)
-            {  
-                button2.Content = "Camera Restart";
+            {
+                buttonCamera.Content = "Camera Restart";
                 webcam.stopTimer();
             }
             else
             {
-                button2.Content = "Camera Stop";
+                buttonCamera.Content = "Camera Stop";
                 webcam.startTimer();
-                button3.IsEnabled = true;
+                buttonSave.IsEnabled = true;
             }
             captureInProgress = !captureInProgress;
         }
 
-        private void button3_Click(object sender, RoutedEventArgs e)
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             if (currentFrame == null)
             {
-                text1.Text = "There is no image to save.";
+                textSystem.Text = "There is no image to save.";
             }
             else
             {
                 if (captureInProgress)
                 {
-                    button2.Content = "Camera Restart";
+                    buttonCamera.Content = "Camera Restart";
                     webcam.stopTimer();
+                    webcam.releaseCamera();
+                    webcam = null;
                     captureInProgress = !captureInProgress;
                 }
 
@@ -193,18 +203,18 @@ namespace Cleffa
                     encoder.Frames.Add(BitmapFrame.Create(formatCoversion.ToBitmapSource(currentFrame)));
                     encoder.Save(stream);
                     stream.Close();
-                    text1.Text = "The image was saved to your computer.";
+                    textSystem.Text = "The image was saved to your computer.";
                 }
             }
         }
 
-        private void comboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void comboBoxDevice_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            webcamDevice = comboBox1.SelectedIndex;
+            webcamDevice = comboBoxDevice.SelectedIndex;
 
-            button2.Content = "Video Streaming";
-            button3.IsEnabled = false;
-            imageBox1.Source = null;
+            buttonCamera.Content = "Video Streaming";
+            buttonSave.IsEnabled = false;
+            imageBoxDisp.Source = null;
 
             if (captureInProgress)
             {

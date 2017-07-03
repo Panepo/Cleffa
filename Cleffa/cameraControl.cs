@@ -58,8 +58,8 @@ namespace Cleffa
             }
 
             capture = new Capture(webcamDevice);
-            capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, 1280);
-            capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight, 720);
+            capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, 1920);
+            capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight, 1080);
 
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(myEventHandler);
