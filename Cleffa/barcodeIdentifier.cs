@@ -116,9 +116,19 @@ namespace Cleffa
                 outRight.X = (int)point[idxRight].X;
                 outRight.Y = (int)point[idxRight].Y;
 
-                outputMat = inputMat.Clone();
-                CvInvoke.Line(outputMat, outLeft, outRight, new Bgr(Color.Cyan).MCvScalar, 10);
+                //outputMat = inputMat.Clone();
+                //CvInvoke.Line(outputMat, outLeft, outRight, new Bgr(Color.Cyan).MCvScalar, 10);
 
+                
+                Mat overlay = new Mat();
+                overlay = inputMat.Clone();
+                Point rectPoint = new Point( outLeft.X - 20, outLeft.Y - 40);
+                Size rectSize = new Size((outRight.X - outLeft.X) + 40, 40);
+                Rectangle rect = new Rectangle(rectPoint, rectSize);
+                CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, -1);
+                CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
+                CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
+                
                 return true;
             }
             else
