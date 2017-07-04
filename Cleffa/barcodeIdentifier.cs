@@ -122,7 +122,7 @@ namespace Cleffa
                 
                 Mat overlay = new Mat();
                 overlay = inputMat.Clone();
-                Point rectPoint = new Point( outLeft.X - 20, outLeft.Y - 40);
+                Point rectPoint = new Point( outLeft.X - 20, outLeft.Y - 20);
                 Size rectSize = new Size((outRight.X - outLeft.X) + 40, 40);
                 Rectangle rect = new Rectangle(rectPoint, rectSize);
                 CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, -1);

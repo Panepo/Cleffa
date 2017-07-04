@@ -18,16 +18,24 @@
         <materialDesign:Card Grid.Row="0" Padding="16" Margin="170,10,10,10" HorizontalAlignment="Right" Width="1135" VerticalAlignment="Stretch">
             <Image x:Name="imageBoxDisp" Height="653" Margin="10,10,10,10" VerticalAlignment="Top"/>
         </materialDesign:Card>
-        
+
         <Button x:Name="buttonImage" Content="Load Image and Decode" HorizontalAlignment="Left" Height="60" Margin="32,32,0,0" VerticalAlignment="Top" Width="250" Click="buttonImage_Click"/>
         <Button x:Name="buttonCamera" Content="Video Streaming" HorizontalAlignment="Left" Height="60" Margin="32,163,0,0" Width="250" Click="buttonCamera_Click" VerticalAlignment="Top" IsEnabled="False"/>
         <Button x:Name="buttonSave" Content="Save Image" HorizontalAlignment="Left" Margin="32,244,0,0" VerticalAlignment="Top" Width="250" Height="60" Click="buttonSave_Click" IsEnabled="False"/>
 
-        <TextBox x:Name="textBarcode" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32,376,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" />
-        <TextBox x:Name="textSystem" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System Message" HorizontalAlignment="Left" Margin="32,334,0,0" Width="250" VerticalAlignment="Top"/>
-        <TextBox x:Name="textTime" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Process Time" HorizontalAlignment="Left" Margin="32,460,0,0" Width="250" VerticalAlignment="Top"/>
-        <TextBox x:Name="textType" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Barcode Type" HorizontalAlignment="Left" Margin="32,418,0,0" Width="250" VerticalAlignment="Top"/>
-        
+        <TextBox x:Name="textBarcode" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Decoded Text" Margin="32,362,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" />
+        <TextBox x:Name="textSystem" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="System Message" HorizontalAlignment="Left" Margin="32,320,0,0" Width="250" VerticalAlignment="Top"/>
+        <TextBox x:Name="textTime" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Process Time" HorizontalAlignment="Left" Margin="32,446,0,0" Width="250" VerticalAlignment="Top"/>
+        <TextBox x:Name="textType" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Barcode Type" HorizontalAlignment="Left" Margin="32,404,0,0" Width="250" VerticalAlignment="Top"/>
+
         <ComboBox x:Name="comboBoxDevice" HorizontalAlignment="Left" Height="32" Margin="32,113,0,0" VerticalAlignment="Top" Width="250" SelectionChanged="comboBoxDevice_SelectionChanged"/>
+
+        <Slider x:Name="sliderBrightness" HorizontalAlignment="Left" Margin="32,528,0,0" VerticalAlignment="Top" Width="250" Maximum="200" IsEnabled="False" AutoToolTipPlacement="TopLeft" ValueChanged="sliderBrightness_ValueChanged" TickFrequency="5"/>
+        <Slider x:Name="sliderSharpness" HorizontalAlignment="Left" Margin="32,572,0,0" VerticalAlignment="Top" Width="250" Maximum="200" IsEnabled="False" AutoToolTipPlacement="TopLeft" ValueChanged="sliderSharpness_ValueChanged" TickFrequency="5"/>
+        <Slider x:Name="sliderContrast" HorizontalAlignment="Left" Margin="32,616,0,0" VerticalAlignment="Top" Width="250" Maximum="200" IsEnabled="False" AutoToolTipPlacement="TopLeft" ValueChanged="sliderContrast_ValueChanged" TickFrequency="5"/>
+
+        <Label x:Name="labelBrightness" Content="Brightness" HorizontalAlignment="Left" Margin="32,502,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelSharpness" Content="Sharpness" HorizontalAlignment="Left" Margin="32,546,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelContrast" Content="Contrast" HorizontalAlignment="Left" Margin="32,590,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

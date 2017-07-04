@@ -82,6 +82,9 @@ namespace Cleffa
                     webcam.releaseCamera();
                     webcam = null;
                     captureInProgress = !captureInProgress;
+                    sliderBrightness.IsEnabled = false;
+                    sliderSharpness.IsEnabled = false;
+                    sliderContrast.IsEnabled = false;
                 }
             }
             else
@@ -122,6 +125,9 @@ namespace Cleffa
                 webcam.releaseCamera();
                 webcam = null;
                 captureInProgress = !captureInProgress;
+                sliderBrightness.IsEnabled = false;
+                sliderSharpness.IsEnabled = false;
+                sliderContrast.IsEnabled = false;
             }
 
             OpenFileDialog open = new OpenFileDialog();
@@ -158,6 +164,13 @@ namespace Cleffa
             if (webcam == null)
             {
                 webcam = new cameraControl(webcamDevice, ProcessFrame);
+
+                sliderBrightness.IsEnabled = true;
+                sliderSharpness.IsEnabled = true;
+                sliderContrast.IsEnabled = true;
+                sliderBrightness.Value = webcam.getParameter("Brightness");
+                sliderSharpness.Value = webcam.getParameter("Sharpness");
+                sliderContrast.Value = webcam.getParameter("Contrast");
             }
 
             if (captureInProgress)
@@ -189,6 +202,9 @@ namespace Cleffa
                     webcam.releaseCamera();
                     webcam = null;
                     captureInProgress = !captureInProgress;
+                    sliderBrightness.IsEnabled = false;
+                    sliderSharpness.IsEnabled = false;
+                    sliderContrast.IsEnabled = false;
                 }
 
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -226,7 +242,28 @@ namespace Cleffa
             { 
                 webcam.releaseCamera();
                 webcam = null;
+                sliderBrightness.IsEnabled = false;
+                sliderSharpness.IsEnabled = false;
+                sliderContrast.IsEnabled = false;
             }
+        }
+
+        private void sliderBrightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (webcam != null)
+                webcam.setParameter("Brightness", sliderBrightness.Value);
+        }
+
+        private void sliderSharpness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (webcam != null)
+                webcam.setParameter("Sharpness", sliderSharpness.Value);
+        }
+
+        private void sliderContrast_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (webcam != null)
+                webcam.setParameter("Contrast", sliderContrast.Value);
         }
     }
 }

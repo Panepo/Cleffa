@@ -13,10 +13,20 @@ namespace Cleffa
 {
     class cameraControl
     {
+        // =================================================================================
+        // global variables
+        // =================================================================================
         private Capture capture;
         private DispatcherTimer timer;
         public int cameraDevice = 0;
 
+        private double paraBrightness;
+        private double paraSharpness;
+        private double paraContrast;
+
+        // =================================================================================
+        // constructor
+        // =================================================================================
         public cameraControl(int webcamDevice, EventHandler myEventHandler)
         {
             cameraDevice = webcamDevice;
@@ -24,11 +34,18 @@ namespace Cleffa
             capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, 1920);
             capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight, 1080);
 
+            paraBrightness = capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness);
+            paraSharpness = capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness);
+            paraContrast = capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast);
+
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(myEventHandler);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
         }
 
+        // =================================================================================
+        // timer controller
+        // =================================================================================
         public void stopTimer()
         {
             if (timer.IsEnabled)
@@ -45,11 +62,17 @@ namespace Cleffa
             }
         }
 
+        // =================================================================================
+        // capture related function
+        // =================================================================================
         public Mat frameCapture()
         {
             return capture.QueryFrame();
         }
 
+        // =================================================================================
+        // parameter settings
+        // =================================================================================
         public void setDevice(int webcamDevice, EventHandler myEventHandler)
         {
             if (capture != null)
@@ -66,6 +89,48 @@ namespace Cleffa
             timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
         }
 
+        public void setParameter(string parameter, double value)
+        {
+            if (capture != null)
+            {
+                if (parameter == "Brightness")
+                {
+                    capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness, value);
+                    paraBrightness = value;
+                }
+                else if (parameter == "Sharpness")
+                {
+                    capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness, value);
+                    paraSharpness = value;
+                }
+                else if (parameter == "Contrast")
+                {
+                    capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, value);
+                    paraContrast = value;
+                }
+            }
+        }
+
+        public double getParameter(string parameter)
+        {
+            if (capture != null)
+            {
+                if (parameter == "Brightness")
+                    return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness);
+                else if (parameter == "Sharpness")
+                    return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness);
+                else if (parameter == "Contrast")
+                    return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast);
+                else
+                    return 0;
+            }
+            else
+                return 0;
+        }
+
+        // =================================================================================
+        // dispose
+        // =================================================================================
         public void releaseCamera()
         {
             if (capture != null)
