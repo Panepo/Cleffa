@@ -20,7 +20,6 @@ namespace Cleffa
         // =================================================================================
         // global variables
         // =================================================================================
-        
         private Mat inputMat = new Mat();
         private Bitmap inputBitmap;
         private Mat outputMat = new Mat();
@@ -29,7 +28,11 @@ namespace Cleffa
         private BarcodeFormat format;
         private Result result = null;
         private ResultPoint[] point = null;
- 
+
+        private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "RSS_14", "RSS_EXPANDED", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
+        private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE"};
+        private string[] formatOther = { "PDF_417"};
+
         // =================================================================================
         // constructor
         // =================================================================================
@@ -40,7 +43,7 @@ namespace Cleffa
         }
 
         // =================================================================================
-        // input & parameter settings
+        // input & options settings
         // =================================================================================
         public void setInputMat(Mat input)
         {
@@ -105,60 +108,40 @@ namespace Cleffa
 
         public bool genPaint()
         {
-            Point outLeft = new Point();
-            Point outRight = new Point();
-
             if (point != null && inputMat != null)
             {
-                int pointLeft = 999999;
-                int pointRight = 0;
-                int idxLeft = 0;
-                int idxRight = 0;
+                string type = format.ToString();
 
-                for (int i = 0; i < point.Length; i += 1)
+                foreach (string x in format1d)
                 {
-                    if (point[i].X < pointLeft)
+                    if (type.Contains(x))
                     {
-                        pointLeft = (int)point[i].X;
-                        idxLeft = i;
-                    }
+                        Point outLeft = new Point();
+                        Point outRight = new Point();
 
-                    if (point[i].X > pointRight)
-                    {
-                        pointRight = (int)point[i].X;
-                        idxRight = i;
+                        outLeft.X = (int)point[0].X;
+                        outLeft.Y = (int)point[0].Y;
+                        outRight.X = (int)point[1].X;
+                        outRight.Y = (int)point[1].Y;
+
+                        Mat overlay = new Mat();
+                        overlay = inputMat.Clone();
+                        Point rectPoint = new Point(outLeft.X - 20, outLeft.Y - 20);
+                        Size rectSize = new Size((outRight.X - outLeft.X) + 40, 40);
+                        Rectangle rect = new Rectangle(rectPoint, rectSize);
+                        CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, -1);
+                        CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
+                        CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
                     }
                 }
-
-
-                outLeft.X = (int)point[idxLeft].X;
-                outLeft.Y = (int)point[idxLeft].Y;
-
-                outRight.X = (int)point[idxRight].X;
-                outRight.Y = (int)point[idxRight].Y;
-
-                //outputMat = inputMat.Clone();
-                //CvInvoke.Line(outputMat, outLeft, outRight, new Bgr(Color.Cyan).MCvScalar, 10);
-
-                
-                Mat overlay = new Mat();
-                overlay = inputMat.Clone();
-                Point rectPoint = new Point( outLeft.X - 20, outLeft.Y - 20);
-                Size rectSize = new Size((outRight.X - outLeft.X) + 40, 40);
-                Rectangle rect = new Rectangle(rectPoint, rectSize);
-                CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, -1);
-                CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
-                CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
-                
                 return true;
             }
             else
                 return false;
         }
 
-
         // =================================================================================
-        // get parameter settings
+        // get result
         // =================================================================================
         public string getResultString()
         {
