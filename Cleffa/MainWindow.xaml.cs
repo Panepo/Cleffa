@@ -72,7 +72,10 @@ namespace Cleffa
                 textType.Text = identify.getResultType();
 
                 if (identify.genPaint())
+                {
                     imageBoxDisp.Source = identify.getResultBitmapSource();
+                    currentFrame = identify.getResultMat();
+                }
 
 
                 if (captureInProgress)
@@ -106,8 +109,8 @@ namespace Cleffa
                 watch.Start();
                 imageBoxDisp.Source = formatCoversion.ToBitmapSource(currentFrame);
 
-                identify.reader.AutoRotate = false;
-                identify.reader.Options.TryHarder = false;
+                identify.setDecoderOption("AutoRotate", 0);
+                identify.setDecoderOption("TryHarder", 0);
                 barcodeDetect(currentFrame.Bitmap);
 
                 watch.Stop();
@@ -143,8 +146,8 @@ namespace Cleffa
                     currentFrame = null;
                     Bitmap image = formatCoversion.BitmapImage2Bitmap(input);
 
-                    identify.reader.AutoRotate = true;
-                    identify.reader.Options.TryHarder = true;
+                    identify.setDecoderOption("AutoRotate", 1);
+                    identify.setDecoderOption("TryHarder", 1);
                     barcodeDetect(image);
 
                     watch.Stop();

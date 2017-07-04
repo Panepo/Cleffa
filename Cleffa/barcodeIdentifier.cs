@@ -25,7 +25,7 @@ namespace Cleffa
         private Bitmap inputBitmap;
         private Mat outputMat = new Mat();
 
-        public BarcodeReader reader = null;
+        private BarcodeReader reader = null;
         private BarcodeFormat format;
         private Result result = null;
         private ResultPoint[] point = null;
@@ -58,6 +58,27 @@ namespace Cleffa
             inputBitmap = input;
             result = null;
             point = null;
+        }
+
+        public void setDecoderOption(string option, int value)
+        {
+            if (reader != null)
+            {
+                if (option == "TryHarder")
+                {
+                    if (value >= 1)
+                        reader.Options.TryHarder = true;
+                    else
+                        reader.Options.TryHarder = false;
+                }
+                else if (option == "AutoRotate")
+                {
+                    if (value >= 1)
+                        reader.AutoRotate = true;
+                    else
+                        reader.AutoRotate = false;
+                }
+            }
         }
 
         // =================================================================================
