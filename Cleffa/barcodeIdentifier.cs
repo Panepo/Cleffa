@@ -30,8 +30,9 @@ namespace Cleffa
         private ResultPoint[] point = null;
 
         private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "RSS_14", "RSS_EXPANDED", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
-        private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE"};
-        private string[] formatOther = { "PDF_417"};
+        private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE", "PDF_417" };
+
+        private int areaScanExtend;
 
         // =================================================================================
         // constructor
@@ -116,22 +117,48 @@ namespace Cleffa
                 {
                     if (type.Contains(x))
                     {
-                        Point outLeft = new Point();
-                        Point outRight = new Point();
-
-                        outLeft.X = (int)point[0].X;
-                        outLeft.Y = (int)point[0].Y;
-                        outRight.X = (int)point[1].X;
-                        outRight.Y = (int)point[1].Y;
+                        Point outLeft = new Point((int)point[0].X, (int)point[0].Y);
+                        Point outRight = new Point((int)point[1].X, (int)point[1].Y);
+                        areaScanExtend = 20;
 
                         Mat overlay = new Mat();
                         overlay = inputMat.Clone();
-                        Point rectPoint = new Point(outLeft.X - 20, outLeft.Y - 20);
-                        Size rectSize = new Size((outRight.X - outLeft.X) + 40, 40);
+                        Point rectPoint = new Point(outLeft.X - areaScanExtend, outLeft.Y - areaScanExtend);
+                        Size rectSize = new Size((outRight.X - outLeft.X) + areaScanExtend*2, areaScanExtend*2);
                         Rectangle rect = new Rectangle(rectPoint, rectSize);
                         CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, -1);
                         CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
                         CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
+                    }
+                }
+
+                foreach (string x in format2d)
+                {
+                    if (type.Contains(x))
+                    {
+                        PointF[] outpt = new PointF[point.Length];
+
+                        for (int i = 0; i < point.Length; i += 1)
+                            outpt[i] = new PointF(point[i].X, point[i].Y);
+
+                        Mat overlay = new Mat();
+                        overlay = inputMat.Clone();
+                        RotatedRect rrec = CvInvoke.MinAreaRect(outpt);
+                        PointF[] pointfs = rrec.GetVertices();
+                        
+                        for (int j = 0; j < pointfs.Length; j++)
+                            CvInvoke.Line(overlay, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new Bgr(Color.Cyan).MCvScalar, 15);
+
+                        CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
+
+                        for (int j = 0; j < pointfs.Length; j++)
+                            CvInvoke.Line(outputMat, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new Bgr(Color.Cyan).MCvScalar, 2);
+
+
+                        //CvInvoke.Circle(outputMat, outLU, 20, new Bgr(Color.Green).MCvScalar, 2);
+                        //CvInvoke.Circle(outputMat, outRD, 20, new Bgr(Color.Blue).MCvScalar, 2);
+
+
                     }
                 }
                 return true;
