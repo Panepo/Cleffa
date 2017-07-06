@@ -12,6 +12,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.Util;
 using Emgu.CV.CvEnum;
+using Emgu.CV.Util;
 
 namespace Cleffa
 {
@@ -30,7 +31,7 @@ namespace Cleffa
         private ResultPoint[] point = null;
 
         private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "RSS_14", "RSS_EXPANDED", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
-        private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE", "PDF_417" };
+        private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE" };
 
         private int areaScanExtend;
 
@@ -41,6 +42,9 @@ namespace Cleffa
         {
             reader = new BarcodeReader();
             format = new BarcodeFormat();
+
+            reader.Options.PossibleFormats = new List<BarcodeFormat>();
+            reader.Options.PossibleFormats.Add(BarcodeFormat.QR_CODE);
         }
 
         // =================================================================================
@@ -126,9 +130,10 @@ namespace Cleffa
                         Point rectPoint = new Point(outLeft.X - areaScanExtend, outLeft.Y - areaScanExtend);
                         Size rectSize = new Size((outRight.X - outLeft.X) + areaScanExtend*2, areaScanExtend*2);
                         Rectangle rect = new Rectangle(rectPoint, rectSize);
-                        CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, -1);
+                        CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, 15);
                         CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
                         CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
+                        return true;
                     }
                 }
 
@@ -136,32 +141,40 @@ namespace Cleffa
                 {
                     if (type.Contains(x))
                     {
-                        PointF[] outpt = new PointF[point.Length];
+                        PointF[] outpt = new PointF[4];
 
                         for (int i = 0; i < point.Length; i += 1)
                             outpt[i] = new PointF(point[i].X, point[i].Y);
 
-                        Mat overlay = new Mat();
-                        overlay = inputMat.Clone();
+                        if (point.Length == 3)
+                        {
+                            float xdiv = outpt[0].X - outpt[1].X;
+                            float ydiv = outpt[0].Y - outpt[1].Y;
+
+                            outpt[3] = new PointF(point[2].X + xdiv, point[2].Y + ydiv);
+                        }
+
                         RotatedRect rrec = CvInvoke.MinAreaRect(outpt);
                         PointF[] pointfs = rrec.GetVertices();
-                        
-                        for (int j = 0; j < pointfs.Length; j++)
+
+                        Mat overlay = new Mat();
+                        overlay = inputMat.Clone();
+
+                        for (int j = 0; j < pointfs.Length; j += 1)
                             CvInvoke.Line(overlay, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new Bgr(Color.Cyan).MCvScalar, 15);
 
                         CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
 
-                        for (int j = 0; j < pointfs.Length; j++)
+                        for (int j = 0; j < pointfs.Length; j += 1)
                             CvInvoke.Line(outputMat, new Point((int)pointfs[j].X, (int)pointfs[j].Y), new Point((int)pointfs[(j + 1) % 4].X, (int)pointfs[(j + 1) % 4].Y), new Bgr(Color.Cyan).MCvScalar, 2);
 
 
                         //CvInvoke.Circle(outputMat, outLU, 20, new Bgr(Color.Green).MCvScalar, 2);
                         //CvInvoke.Circle(outputMat, outRD, 20, new Bgr(Color.Blue).MCvScalar, 2);
-
-
+                        return true;
                     }
                 }
-                return true;
+                return false;
             }
             else
                 return false;
