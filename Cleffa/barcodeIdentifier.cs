@@ -30,6 +30,7 @@ namespace Cleffa
         private Result result = null;
         private ResultPoint[] point = null;
 
+        private string[] formatUsage = { "Retail", "Industrial", "QR_Code", "ID_License", "2D" };
         private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "RSS_14", "RSS_EXPANDED", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
         private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE" };
 
@@ -42,9 +43,6 @@ namespace Cleffa
         {
             reader = new BarcodeReader();
             format = new BarcodeFormat();
-
-            reader.Options.PossibleFormats = new List<BarcodeFormat>();
-            reader.Options.PossibleFormats.Add(BarcodeFormat.QR_CODE);
         }
 
         // =================================================================================
@@ -85,6 +83,42 @@ namespace Cleffa
                         reader.AutoRotate = true;
                     else
                         reader.AutoRotate = false;
+                }
+            }
+        }
+
+        public void setDecoderFormat(string option)
+        {
+            if (reader != null)
+            {
+                switch (option)
+                {
+                    case "Retail":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.EAN_8);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.EAN_13);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.UPC_A);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.UPC_E);
+                        break;
+                    case "Industrial":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.CODE_39);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.CODE_128);
+                        break;
+                    case "QR_Code":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.QR_CODE);
+                        break;
+                    case "ID_License":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.PDF_417);
+                        break;
+                    case "2D":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.QR_CODE);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.AZTEC);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.DATA_MATRIX);
+                        break;
                 }
             }
         }
