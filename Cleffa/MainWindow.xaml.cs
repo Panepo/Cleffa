@@ -57,8 +57,9 @@ namespace Cleffa
                 buttonCamera.IsEnabled = true;
             }
 
-            identify = new barcodeIdentifier();
             watch = new Stopwatch();
+            identify = new barcodeIdentifier();
+            //identify.setDecoderFormat("Test");
         }
 
         private void barcodeDetect(Bitmap image)

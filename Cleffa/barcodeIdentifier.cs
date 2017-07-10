@@ -31,8 +31,10 @@ namespace Cleffa
         private ResultPoint[] point = null;
 
         private string[] formatUsage = { "Retail", "Industrial", "QR_Code", "ID_License", "2D" };
-        private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "RSS_14", "RSS_EXPANDED", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
-        private string[] format2d = { "AZTEC", "DATA_MATRIX", "MAXICODE", "QR_CODE" };
+        private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
+        private string[] format2d = { "AZTEC", "QR_CODE"  };
+        private string[] format1dx = { "RSS_14", "RSS_EXPANDED" }; // more that 2 barcode points
+        private string[] formatTest = { "DATA_MATRIX", "PDF_417" }; // no points
 
         private int areaScanExtend;
 
@@ -70,19 +72,20 @@ namespace Cleffa
         {
             if (reader != null)
             {
-                if (option == "TryHarder")
+                switch (option)
                 {
-                    if (value >= 1)
-                        reader.Options.TryHarder = true;
-                    else
-                        reader.Options.TryHarder = false;
-                }
-                else if (option == "AutoRotate")
-                {
-                    if (value >= 1)
-                        reader.AutoRotate = true;
-                    else
-                        reader.AutoRotate = false;
+                    case "TryHarder":
+                        if (value >= 1)
+                            reader.Options.TryHarder = true;
+                        else
+                            reader.Options.TryHarder = false;
+                        break;
+                    case "AutoRotate":
+                        if (value >= 1)
+                            reader.AutoRotate = true;
+                        else
+                            reader.AutoRotate = false;
+                        break;
                 }
             }
         }
@@ -119,6 +122,10 @@ namespace Cleffa
                         reader.Options.PossibleFormats.Add(BarcodeFormat.AZTEC);
                         reader.Options.PossibleFormats.Add(BarcodeFormat.DATA_MATRIX);
                         break;
+                    case "Test":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.MAXICODE);
+                        break;
                 }
             }
         }
@@ -147,7 +154,7 @@ namespace Cleffa
 
         public bool genPaint()
         {
-            if (point != null && inputMat != null)
+            if (point.Length >= 1 && inputMat != null)
             {
                 string type = format.ToString();
 
@@ -163,6 +170,41 @@ namespace Cleffa
                         overlay = inputMat.Clone();
                         Point rectPoint = new Point(outLeft.X - areaScanExtend, outLeft.Y - areaScanExtend);
                         Size rectSize = new Size((outRight.X - outLeft.X) + areaScanExtend*2, areaScanExtend*2);
+                        Rectangle rect = new Rectangle(rectPoint, rectSize);
+                        CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, 15);
+                        CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
+                        CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
+                        return true;
+                    }
+                }
+
+                foreach (string x in format1dx)
+                {
+                    if (type.Contains(x))
+                    {
+                        Point outLeft = new Point((int)point[0].X, (int)point[0].Y);
+                        Point outRight = new Point((int)point[0].X, (int)point[0].Y);
+
+                        foreach (ResultPoint pts in point)
+                        {
+                            if ((int)pts.X < outLeft.X)
+                            {
+                                outLeft.X = (int)pts.X;
+                                outLeft.Y = (int)pts.Y;
+                            }
+
+                            if ((int)pts.X > outRight.X)
+                            {
+                                outRight.X = (int)pts.X;
+                                outRight.Y = (int)pts.Y;
+                            }
+                        }
+
+                        areaScanExtend = 20;
+                        Mat overlay = new Mat();
+                        overlay = inputMat.Clone();
+                        Point rectPoint = new Point(outLeft.X - areaScanExtend * 2, outLeft.Y - areaScanExtend);
+                        Size rectSize = new Size((outRight.X - outLeft.X) + areaScanExtend * 4, areaScanExtend * 2);
                         Rectangle rect = new Rectangle(rectPoint, rectSize);
                         CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, 15);
                         CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
@@ -206,6 +248,30 @@ namespace Cleffa
                         //CvInvoke.Circle(outputMat, outLU, 20, new Bgr(Color.Green).MCvScalar, 2);
                         //CvInvoke.Circle(outputMat, outRD, 20, new Bgr(Color.Blue).MCvScalar, 2);
                         return true;
+                    }
+                }
+
+                foreach (string x in formatTest)
+                {
+                    if (type.Contains(x))
+                    {
+                        Mat overlay = new Mat();
+                        overlay = inputMat.Clone();
+
+                        for (int i = 0; i < point.Length; i += 1)
+                        {
+                            Point temPoint = new Point((int)point[i].X, (int)point[i].Y);
+                            CvInvoke.Circle(overlay, temPoint, 20, new Bgr(Color.Cyan).MCvScalar, 15);
+                        }
+
+                        CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
+
+                        for (int i = 0; i < point.Length; i += 1)
+                        {
+                            Point temPoint = new Point((int)point[i].X, (int)point[i].Y);
+                            CvInvoke.Circle(outputMat, temPoint, 20, new Bgr(Color.Cyan).MCvScalar, 2);
+                        }
+
                     }
                 }
                 return false;
