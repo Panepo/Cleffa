@@ -215,7 +215,7 @@ namespace Cleffa
 
                 foreach (string x in format2d)
                 {
-                    if (type.Contains(x))
+                    if (type.Contains(x) && point.Length <= 4)
                     {
                         PointF[] outpt = new PointF[4];
 

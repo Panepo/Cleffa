@@ -38,6 +38,9 @@ namespace Cleffa
         private barcodeIdentifier identify;
         private Stopwatch watch;
 
+        private bool modeTest = false;
+        private int modeTestTimes = 1000;
+
         public MainWindow() 
         {
             InitializeComponent();
@@ -60,11 +63,20 @@ namespace Cleffa
             watch = new Stopwatch();
             identify = new barcodeIdentifier();
             //identify.setDecoderFormat("Test");
+
+            if (modeTest)
+                this.Title = "Cleffa [Test Mode]";
         }
 
         private void barcodeDetect(Bitmap image)
         {  
             identify.setInputBitmap(image);
+
+            if (modeTest)
+            {
+                for (int i = 0; i < modeTestTimes; i += 1)
+                    identify.genDecode();
+            }
 
             if (identify.genDecode())
             {
