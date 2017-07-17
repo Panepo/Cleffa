@@ -38,8 +38,10 @@ namespace Cleffa
         private barcodeIdentifier identify;
         private Stopwatch watch;
 
+        // test mode flags
         private bool modeTest = false;
         private int modeTestTimes = 1000;
+        private string format = "Single";
 
         public MainWindow() 
         {
@@ -48,7 +50,7 @@ namespace Cleffa
             DsDevice[] systemCameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
             webcams = new cameraDevice[systemCameras.Length];
 
-            for (int i = 0; i < systemCameras.Length; i++)
+            for (int i = 0; i < systemCameras.Length; i += 1)
             {
                 webcams[i] = new cameraDevice(i, systemCameras[i].Name, systemCameras[i].ClassID);
                 comboBoxDevice.Items.Add(webcams[i].ToStringS());
@@ -62,10 +64,13 @@ namespace Cleffa
 
             watch = new Stopwatch();
             identify = new barcodeIdentifier();
-            //identify.setDecoderFormat("Test");
-
+            
             if (modeTest)
-                this.Title = "Cleffa [Test Mode]";
+            {
+                identify.setDecoderFormat(format);
+                this.Title += " [Format: " + format + "]";
+                this.Title += " [Test Mode][Auto Rotate][Try Harder]";
+            }
         }
 
         private void barcodeDetect(Bitmap image)

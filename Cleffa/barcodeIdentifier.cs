@@ -22,7 +22,6 @@ namespace Cleffa
         // global variables
         // =================================================================================
         private Mat inputMat = new Mat();
-        private Bitmap inputBitmap;
         private Mat outputMat = new Mat();
 
         private BarcodeReader reader = null;
@@ -53,7 +52,6 @@ namespace Cleffa
         public void setInputMat(Mat input)
         {
             inputMat = input;
-            inputBitmap = input.Bitmap;
             result = null;
             point = null;
         }
@@ -63,7 +61,6 @@ namespace Cleffa
             Image<Bgr, Byte> temp = new Image<Bgr, byte>(input);
 
             inputMat = temp.Mat;
-            inputBitmap = input;
             result = null;
             point = null;
         }
@@ -124,7 +121,12 @@ namespace Cleffa
                         break;
                     case "Test":
                         reader.Options.PossibleFormats = new List<BarcodeFormat>();
-                        reader.Options.PossibleFormats.Add(BarcodeFormat.MAXICODE);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.CODE_39);
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.EAN_13);
+                        break;
+                    case "Single":
+                        reader.Options.PossibleFormats = new List<BarcodeFormat>();
+                        reader.Options.PossibleFormats.Add(BarcodeFormat.EAN_13);
                         break;
                 }
             }
@@ -135,8 +137,15 @@ namespace Cleffa
         // =================================================================================
         public bool genDecode()
         {
-            if (inputBitmap != null)
+            if (inputMat != null)
             {
+                Mat input = new Mat();
+                input = inputMat.Clone();
+
+                CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
+                CvInvoke.CLAHE(input, 3.0, new Size(8,8), input);
+
+                Bitmap inputBitmap = input.Bitmap;
                 result = reader.Decode(inputBitmap);
 
                 if (result != null)
