@@ -141,10 +141,6 @@ namespace Cleffa
             {
                 Mat input = new Mat();
                 input = inputMat.Clone();
-
-                CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
-                CvInvoke.CLAHE(input, 3.0, new Size(8,8), input);
-
                 Bitmap inputBitmap = input.Bitmap;
                 result = reader.Decode(inputBitmap);
 
@@ -153,6 +149,20 @@ namespace Cleffa
                     format = result.BarcodeFormat;
                     point = result.ResultPoints;
                     return true;
+                }
+                else
+                {
+                    CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
+                    CvInvoke.CLAHE(input, 3.0, new Size(8, 8), input);
+                    inputBitmap = input.Bitmap;
+                    result = reader.Decode(inputBitmap);
+
+                    if (result != null)
+                    {
+                        format = result.BarcodeFormat;
+                        point = result.ResultPoints;
+                        return true;
+                    }
                 }
 
                 return false;

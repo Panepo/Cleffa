@@ -39,9 +39,11 @@ namespace Cleffa
         private Stopwatch watch;
 
         // test mode flags
-        private bool modeTest = false;
-        private int modeTestTimes = 1000;
-        private string format = "Single";
+        private bool modeTest = true;
+        private int modeTestTimes = 0;
+        private string format = "All";
+        private bool modeHarder = true;
+        private bool modeRotate = false;
 
         public MainWindow() 
         {
@@ -69,7 +71,10 @@ namespace Cleffa
             {
                 identify.setDecoderFormat(format);
                 this.Title += " [Format: " + format + "]";
-                this.Title += " [Test Mode][Auto Rotate][Try Harder]";
+                this.Title += "[Test Mode]";
+
+                if (modeHarder) this.Title += "[Try Harder]";
+                if (modeRotate) this.Title += "[Auto Rotate]";
             }
         }
 
@@ -164,8 +169,23 @@ namespace Cleffa
                     currentFrame = null;
                     Bitmap image = formatCoversion.BitmapImage2Bitmap(input);
 
-                    identify.setDecoderOption("AutoRotate", 1);
-                    identify.setDecoderOption("TryHarder", 1);
+                    if (modeTest)
+                    {
+                        if (modeHarder)
+                            identify.setDecoderOption("TryHarder", 1);
+                        else
+                            identify.setDecoderOption("TryHarder", 0);
+
+                        if (modeRotate)
+                            identify.setDecoderOption("AutoRotate", 1);
+                        else
+                            identify.setDecoderOption("AutoRotate", 0);
+                    }
+                    else
+                    {
+                        identify.setDecoderOption("AutoRotate", 1);
+                        identify.setDecoderOption("TryHarder", 1);
+                    }
                     barcodeDetect(image);
 
                     watch.Stop();
