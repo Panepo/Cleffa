@@ -49,17 +49,13 @@ namespace Cleffa
         public void stopTimer()
         {
             if (timer.IsEnabled)
-            {
                 timer.Stop();
-            }
         }
 
         public void startTimer()
         {
             if (!timer.IsEnabled)
-            {
                 timer.Start();
-            }
         }
 
         // =================================================================================
@@ -76,9 +72,7 @@ namespace Cleffa
         public void setDevice(int webcamDevice, EventHandler myEventHandler)
         {
             if (capture != null)
-            {
                 capture.Dispose();
-            }
 
             capture = new Capture(webcamDevice);
             capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth, 1920);
@@ -93,20 +87,20 @@ namespace Cleffa
         {
             if (capture != null)
             {
-                if (parameter == "Brightness")
+                switch (parameter)
                 {
-                    capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness, value);
-                    paraBrightness = value;
-                }
-                else if (parameter == "Sharpness")
-                {
-                    capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness, value);
-                    paraSharpness = value;
-                }
-                else if (parameter == "Contrast")
-                {
-                    capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, value);
-                    paraContrast = value;
+                    case "Brightness":
+                        capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness, value);
+                        paraBrightness = value;
+                        break;
+                    case "Sharpness":
+                        capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness, value);
+                        paraSharpness = value;
+                        break;
+                    case "Contrast":
+                        capture.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast, value);
+                        paraContrast = value;
+                        break;
                 }
             }
         }
@@ -115,14 +109,17 @@ namespace Cleffa
         {
             if (capture != null)
             {
-                if (parameter == "Brightness")
-                    return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness);
-                else if (parameter == "Sharpness")
-                    return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness);
-                else if (parameter == "Contrast")
-                    return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast);
-                else
-                    return 0;
+                switch (parameter)
+                {
+                    case "Brightness":
+                        return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness);
+                    case "Sharpness":
+                        return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness);
+                    case "Contrast"
+                        return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast);
+                    default:
+                        return 0;
+                }
             }
             else
                 return 0;
@@ -134,9 +131,7 @@ namespace Cleffa
         public void releaseCamera()
         {
             if (capture != null)
-            {
                 capture.Dispose();
-            }
         }
     }
 }
