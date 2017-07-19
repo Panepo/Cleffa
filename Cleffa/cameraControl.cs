@@ -115,7 +115,7 @@ namespace Cleffa
                         return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Brightness);
                     case "Sharpness":
                         return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Sharpness);
-                    case "Contrast"
+                    case "Contrast":
                         return capture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Contrast);
                     default:
                         return 0;

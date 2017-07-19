@@ -29,6 +29,9 @@ namespace Cleffa
         private Result result = null;
         private ResultPoint[] point = null;
 
+        private bool modeHarder = false;
+        private bool modeRotate = false;
+
         private string[] formatUsage = { "Retail", "Industrial", "QR_Code", "ID_License", "2D" };
         private string[] format1d = { "CODABAR", "CODE_128", "CODE_39", "CODE_93", "EAN_13", "EAN_8", "ITF", "UPC_A", "UPC_E", "UPC_EAN_EXTENSION" };
         private string[] format2d = { "AZTEC", "QR_CODE"  };
@@ -73,15 +76,15 @@ namespace Cleffa
                 {
                     case "TryHarder":
                         if (value >= 1)
-                            reader.Options.TryHarder = true;
+                            modeHarder = true;
                         else
-                            reader.Options.TryHarder = false;
+                            modeHarder = false;
                         break;
                     case "AutoRotate":
                         if (value >= 1)
-                            reader.AutoRotate = true;
+                            modeRotate = true;
                         else
-                            reader.AutoRotate = false;
+                            modeRotate = false;
                         break;
                 }
             }
@@ -142,6 +145,10 @@ namespace Cleffa
                 Mat input = new Mat();
                 input = inputMat.Clone();
                 Bitmap inputBitmap = input.Bitmap;
+
+                reader.Options.TryHarder = false;
+                reader.AutoRotate = false;
+
                 result = reader.Decode(inputBitmap);
 
                 if (result != null)
@@ -152,16 +159,31 @@ namespace Cleffa
                 }
                 else
                 {
-                    CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
-                    CvInvoke.CLAHE(input, 3.0, new Size(8, 8), input);
-                    inputBitmap = input.Bitmap;
-                    result = reader.Decode(inputBitmap);
-
-                    if (result != null)
+                    if (modeHarder)
                     {
-                        format = result.BarcodeFormat;
-                        point = result.ResultPoints;
-                        return true;
+                        reader.Options.TryHarder = true;
+                        result = reader.Decode(inputBitmap);
+
+                        if (result != null)
+                        {
+                            format = result.BarcodeFormat;
+                            point = result.ResultPoints;
+                            return true;
+                        }
+                        else
+                        {
+                            CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
+                            CvInvoke.CLAHE(input, 3.0, new Size(8, 8), input);
+                            inputBitmap = input.Bitmap;
+                            result = reader.Decode(inputBitmap);
+
+                            if (result != null)
+                            {
+                                format = result.BarcodeFormat;
+                                point = result.ResultPoints;
+                                return true;
+                            }
+                        }
                     }
                 }
 

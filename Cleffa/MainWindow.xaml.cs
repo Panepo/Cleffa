@@ -71,7 +71,7 @@ namespace Cleffa
             {
                 identify.setDecoderFormat(format);
                 this.Title += " [Format: " + format + "]";
-                this.Title += "[Test Mode]";
+                this.Title += "[Test Mode: " + modeTestTimes.ToString() + " Times]";
 
                 if (modeHarder) this.Title += "[Try Harder]";
                 if (modeRotate) this.Title += "[Auto Rotate]";
