@@ -40,10 +40,9 @@ namespace Cleffa
 
         private int areaScanExtend;
 
+        private bool enableHaar = false;
         private static readonly CascadeClassifier classifier = new CascadeClassifier("barcode_0.2_2000_10.xml");
-
         private Rectangle[] rectangles;
-
         private Rectangle rectROI = new Rectangle();
         private bool rectFlag = false;
 
@@ -153,36 +152,85 @@ namespace Cleffa
                 Mat inputGray = new Mat();
                 input = inputMat.Clone();
 
-                CvInvoke.CvtColor(input, inputGray, ColorConversion.Bgra2Gray);
-                CvInvoke.CLAHE(inputGray, 3.0, new Size(8, 8), inputGray);
-                rectangles = classifier.DetectMultiScale(inputGray, 1.3, 5);
-
-                rectFlag = false;
-
-                if (rectangles != null)
+                if (enableHaar)
                 {
+                    CvInvoke.CvtColor(input, inputGray, ColorConversion.Bgra2Gray);
+                    CvInvoke.CLAHE(inputGray, 3.0, new Size(8, 8), inputGray);
+                    rectangles = classifier.DetectMultiScale(inputGray, 1.3, 5);
 
-                    int xmin = rectangles[0].X;
-                    int ymin = rectangles[0].Y;
-                    int xmax = rectangles[0].X + rectangles[0].Width;
-                    int ymax = rectangles[0].Y + rectangles[0].Height;
+                    rectFlag = false;
 
-                    foreach (Rectangle rect in rectangles)
+                    if (rectangles != null)
                     {
-                        if (rect.X < xmin) xmin = rect.X;
-                        if (rect.Y < ymin) ymin = rect.Y;
-                        if (rect.X > xmax) xmax = rect.X;
-                        if (rect.Y > ymax) ymax = rect.Y;
+
+                        int xmin = rectangles[0].X;
+                        int ymin = rectangles[0].Y;
+                        int xmax = rectangles[0].X + rectangles[0].Width;
+                        int ymax = rectangles[0].Y + rectangles[0].Height;
+
+                        foreach (Rectangle rect in rectangles)
+                        {
+                            if (rect.X < xmin) xmin = rect.X;
+                            if (rect.Y < ymin) ymin = rect.Y;
+                            if (rect.X > xmax) xmax = rect.X;
+                            if (rect.Y > ymax) ymax = rect.Y;
+                        }
+
+                        Rectangle rectCrop = new Rectangle(xmin, ymin, (xmax - xmin), (ymax - ymin));
+                        Mat inputCrop = new Mat(inputGray, rectCrop);
+                        rectROI = rectCrop;
+
+                        reader.Options.TryHarder = false;
+                        reader.AutoRotate = false;
+
+                        Bitmap inputBitmap = inputCrop.Bitmap;
+                        result = reader.Decode(inputBitmap);
+
+                        if (result != null)
+                        {
+                            format = result.BarcodeFormat;
+                            point = result.ResultPoints;
+                            rectFlag = true;
+                            return true;
+                        }
+                        else
+                        {
+                            if (modeHarder)
+                            {
+                                reader.Options.TryHarder = true;
+                                result = reader.Decode(inputBitmap);
+
+                                if (result != null)
+                                {
+                                    format = result.BarcodeFormat;
+                                    point = result.ResultPoints;
+                                    rectFlag = true;
+                                    return true;
+                                }
+                                else
+                                {
+                                    CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
+                                    CvInvoke.CLAHE(input, 3.0, new Size(8, 8), input);
+                                    inputBitmap = input.Bitmap;
+                                    result = reader.Decode(inputBitmap);
+
+                                    if (result != null)
+                                    {
+                                        format = result.BarcodeFormat;
+                                        point = result.ResultPoints;
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
                     }
-
-                    Rectangle rectCrop = new Rectangle(xmin, ymin, (xmax - xmin), (ymax - ymin));
-                    Mat inputCrop = new Mat(inputGray, rectCrop);
-                    rectROI = rectCrop;
-
+                }
+                else
+                {
                     reader.Options.TryHarder = false;
                     reader.AutoRotate = false;
 
-                    Bitmap inputBitmap = inputCrop.Bitmap;
+                    Bitmap inputBitmap = input.Bitmap;
                     result = reader.Decode(inputBitmap);
 
                     if (result != null)
@@ -253,23 +301,30 @@ namespace Cleffa
 
                         if (rectFlag)
                         {
-                            CvInvoke.Rectangle(overlay, rectROI, new Bgr(Color.Yellow).MCvScalar, 15);
+                            if (enableHaar)
+                                CvInvoke.Rectangle(overlay, rectROI, new Bgr(Color.Yellow).MCvScalar, 15);
+
                             CvInvoke.Rectangle(overlay, rect, new Bgr(Color.LightGreen).MCvScalar, 15);
                             
                             CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
 
-                            CvInvoke.Rectangle(outputMat, rectROI, new Bgr(Color.Yellow).MCvScalar, 2);
+                            if (enableHaar)
+                                CvInvoke.Rectangle(outputMat, rectROI, new Bgr(Color.Yellow).MCvScalar, 2);
+
                             CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.LightGreen).MCvScalar, 2);
                             
                         }
                         else
                         {
-                            CvInvoke.Rectangle(overlay, rectROI, new Bgr(Color.Yellow).MCvScalar, 15);
+                            if (enableHaar)
+                                CvInvoke.Rectangle(overlay, rectROI, new Bgr(Color.Yellow).MCvScalar, 15);
                             CvInvoke.Rectangle(overlay, rect, new Bgr(Color.Cyan).MCvScalar, 15);
                             
                             CvInvoke.AddWeighted(inputMat, 0.7, overlay, 0.3, 0, outputMat);
 
-                            CvInvoke.Rectangle(outputMat, rectROI, new Bgr(Color.Yellow).MCvScalar, 2);
+                            if (enableHaar)
+                                CvInvoke.Rectangle(outputMat, rectROI, new Bgr(Color.Yellow).MCvScalar, 2);
+
                             CvInvoke.Rectangle(outputMat, rect, new Bgr(Color.Cyan).MCvScalar, 2);
                             
                         }
