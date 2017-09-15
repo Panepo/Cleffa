@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
 
 using ZXing;
 
 using Emgu.CV;
 using Emgu.CV.Structure;
-using Emgu.Util;
 using Emgu.CV.CvEnum;
-using Emgu.CV.Util;
 
 namespace Cleffa
 {
@@ -144,8 +140,16 @@ namespace Cleffa
         // =================================================================================
         // calculations
         // =================================================================================
+        [DllImport("Clefable.dll")]
+        private static extern double Add(double a, double b);
+
         public bool genDecode()
         {
+            double testA = 1;
+            double testB = 2;
+            double testC = Add(testA, testB);
+
+
             if (inputMat != null)
             {
                 Mat input = new Mat();
