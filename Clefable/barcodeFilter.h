@@ -1,11 +1,13 @@
 ﻿#pragma once
 
+#include <opencv2\core\core.hpp>
+
 namespace Clefable
 {
-    public ref class Class1 sealed
+    public ref class barcodeFilter sealed
     {
 	public:
-		Class1();
+		barcodeFilter();
 		static double Add(double a, double b);
 	};
 }

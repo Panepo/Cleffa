@@ -26,11 +26,11 @@ namespace testClefable
         public MainPage()
         {
             this.InitializeComponent();
-}
+        }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            Result.Text = Clefable.Class1.Add(3, 5).ToString();
+            Result.Text = Clefable.barcodeFilter.Add(3, 5).ToString();
         }
     }
 }

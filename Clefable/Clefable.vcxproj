@@ -111,9 +111,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <GenerateManifest>false</GenerateManifest>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <GenerateManifest>false</GenerateManifest>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -184,10 +188,13 @@
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>%OCV2015_ROOT%\modules\ml\include;%OCV2015_ROOT%\modules\objdetect\include;%OCV2015_ROOT%\modules\hal\include;%OCV2015_ROOT%\modules\highgui\include;%OCV2015_ROOT%\modules\core\include;%OCV2015_ROOT%\modules\imgproc\include;%OCV2015_ROOT%\modules\imgcodecs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>opencv_calib3d300.lib;opencv_core300.lib;opencv_features2d300.lib;opencv_flann300.lib;opencv_hal300.lib;opencv_imgcodecs300.lib;opencv_imgproc300.lib;opencv_ml300.lib;opencv_objdetect300.lib;opencv_photo300.lib;opencv_shape300.lib;opencv_stitching300.lib;opencv_video300.lib;opencv_videoio300.lib;opencv_videostab300.lib;opencv_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%OCV2015_ROOT%\vs2015\WS\10.0\x64\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -199,10 +206,13 @@
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>28204</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>%OCV2015_ROOT%\modules\ml\include;%OCV2015_ROOT%\modules\objdetect\include;%OCV2015_ROOT%\modules\hal\include;%OCV2015_ROOT%\modules\highgui\include;%OCV2015_ROOT%\modules\core\include;%OCV2015_ROOT%\modules\imgproc\include;%OCV2015_ROOT%\modules\imgcodecs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>opencv_calib3d300.lib;opencv_core300.lib;opencv_features2d300.lib;opencv_flann300.lib;opencv_hal300.lib;opencv_imgcodecs300.lib;opencv_imgproc300.lib;opencv_ml300.lib;opencv_objdetect300.lib;opencv_photo300.lib;opencv_shape300.lib;opencv_stitching300.lib;opencv_video300.lib;opencv_videoio300.lib;opencv_videostab300.lib;opencv_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%OCV2015_ROOT%\vs2015\WS\10.0\x64\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -219,6 +229,53 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="barcodeFilter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_calib3d300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_core300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_features2d300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_flann300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_imgcodecs300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_imgproc300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_ml300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_objdetect300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_photo300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_shape300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_stitching300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_video300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_videoio300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_videostab300.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_winrt.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
