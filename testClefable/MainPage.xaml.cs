@@ -1,4 +1,9 @@
 ﻿using System;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using Windows.Storage.FileProperties;
+using Windows.Graphics.Imaging;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +18,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Imaging;
 
 //空白頁項目範本收錄在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -25,12 +31,34 @@ namespace testClefable
     {
         public MainPage()
         {
-            this.InitializeComponent();
+            this.InitializeComponent(); 
         }
 
-        private void AddBtn_Click(object sender, RoutedEventArgs e)
+        private async void btn_Click(object sender, RoutedEventArgs e)
         {
-            Result.Text = Clefable.barcodeFilter.Add(3, 5).ToString();
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".jpeg");
+            openPicker.FileTypeFilter.Add(".png");
+            StorageFile file = await openPicker.PickSingleFileAsync();
+
+            if (file != null)
+            {
+                using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                    WriteableBitmap bmp = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+                    bmp.SetSource(stream);
+
+                    //Clefable.barcodeFilter bf = new Clefable.barcodeFilter();
+
+                    image.Source = bmp;
+                    //image2.Source = bf.processFilterTest(bmp);
+                }
+
+            }
         }
     }
 }
