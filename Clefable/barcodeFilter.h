@@ -21,11 +21,7 @@ namespace Clefable
     public ref class barcodeFilter sealed
     {
 	public:
-		barcodeFilter();
 		static WriteableBitmap^ processFilterBitmap(WriteableBitmap^ input);
-		static WriteableBitmap^ processFilterTest(WriteableBitmap^ input);
-
-		static double add(double a, double b);
 	
 	private:
 		static Mat convertBitmapToMat(WriteableBitmap^ input);

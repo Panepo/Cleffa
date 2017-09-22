@@ -4,17 +4,6 @@
 using namespace Clefable;
 using namespace Platform;
 
-barcodeFilter::barcodeFilter()
-{
-
-
-};
-
-double barcodeFilter::add(double a, double b)
-{
-	return a + b;
-}
-
 // =================================================================================
 // input, output and process
 // =================================================================================
@@ -26,17 +15,20 @@ WriteableBitmap^ barcodeFilter::processFilterBitmap(WriteableBitmap^ input)
 	return convertMatToBitmap(matFilter);
 }
 
-WriteableBitmap^ barcodeFilter::processFilterTest(WriteableBitmap^ input)
-{
-	return input;
-}
-
 Mat barcodeFilter::processFilter(Mat input)
 {
 	Mat matGray = Mat(input.rows, input.cols, CV_8UC4);
-	cvtColor(input, matGray, CV_BGR2BGRA);
+	Mat matDst;
 	
-	return matGray;
+	cvtColor(input, matGray, CV_BGR2GRAY);
+
+	Ptr<CLAHE> clahe = createCLAHE();
+	clahe->setClipLimit(4);
+	clahe->apply(matGray, matDst);
+
+	cvtColor(matDst, matDst, CV_GRAY2BGRA);
+	
+	return matDst;
 }
 
 // =================================================================================
