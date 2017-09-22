@@ -31,7 +31,9 @@ namespace testClefable
     {
         public MainPage()
         {
-            this.InitializeComponent(); 
+            this.InitializeComponent();
+
+            
         }
 
         private async void btn_Click(object sender, RoutedEventArgs e)
@@ -55,7 +57,9 @@ namespace testClefable
                     //Clefable.barcodeFilter bf = new Clefable.barcodeFilter();
 
                     image.Source = bmp;
-                    //image2.Source = bf.processFilterTest(bmp);
+
+                    //btn.Content = Clefable.barcodeFilter.add(3, 5).ToString();
+                    //image2.Source = Clefable.barcodeFilter.processFilterTest(bmp);
                 }
 
             }

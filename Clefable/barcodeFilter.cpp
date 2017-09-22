@@ -10,6 +10,11 @@ barcodeFilter::barcodeFilter()
 
 };
 
+double barcodeFilter::add(double a, double b)
+{
+	return a + b;
+}
+
 // =================================================================================
 // input, output and process
 // =================================================================================

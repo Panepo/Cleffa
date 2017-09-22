@@ -23,15 +23,17 @@ namespace Clefable
     {
 	public:
 		barcodeFilter();
-		WriteableBitmap^ processFilterBitmap(WriteableBitmap^ input);
-		WriteableBitmap^ processFilterTest(WriteableBitmap^ input);
+		static WriteableBitmap^ processFilterBitmap(WriteableBitmap^ input);
+		static WriteableBitmap^ processFilterTest(WriteableBitmap^ input);
+
+		static double add(double a, double b);
 	
 	private:
-		Mat convertBitmapToMat(WriteableBitmap^ input);
-		byte* GetPointerToPixelBuffer(IBuffer^ pixelBuffer);
-		WriteableBitmap^ convertMatToBitmap(Mat input);
+		static Mat convertBitmapToMat(WriteableBitmap^ input);
+		static byte* GetPointerToPixelBuffer(IBuffer^ pixelBuffer);
+		static WriteableBitmap^ convertMatToBitmap(Mat input);
 
-		Mat processFilter(Mat input);
+		static Mat processFilter(Mat input);
 	};
 }
 

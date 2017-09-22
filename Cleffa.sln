@@ -8,6 +8,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clefable", "Clefable\Clefable.vcxproj", "{8FBABB5E-2DF9-4F17-A9A1-4469E3D31A84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testClefable", "testClefable\testClefable.csproj", "{E2416DF8-CA15-4BFD-8C60-3049F9D7EAFB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testClefableCP", "testClefableCP\testClefableCP.vcxproj", "{7624C5C0-8919-4AC7-927F-24B8C9E272A3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8FBABB5E-2DF9-4F17-A9A1-4469E3D31A84} = {8FBABB5E-2DF9-4F17-A9A1-4469E3D31A84}
 	EndProjectSection
@@ -74,6 +76,26 @@ Global
 		{E2416DF8-CA15-4BFD-8C60-3049F9D7EAFB}.Release|x86.ActiveCfg = Release|x86
 		{E2416DF8-CA15-4BFD-8C60-3049F9D7EAFB}.Release|x86.Build.0 = Release|x86
 		{E2416DF8-CA15-4BFD-8C60-3049F9D7EAFB}.Release|x86.Deploy.0 = Release|x86
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|ARM.Build.0 = Debug|ARM
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|ARM.Deploy.0 = Debug|ARM
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|x64.ActiveCfg = Debug|x64
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|x64.Build.0 = Debug|x64
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|x64.Deploy.0 = Debug|x64
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|x86.ActiveCfg = Debug|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|x86.Build.0 = Debug|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Debug|x86.Deploy.0 = Debug|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|Any CPU.ActiveCfg = Release|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|ARM.ActiveCfg = Release|ARM
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|ARM.Build.0 = Release|ARM
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|ARM.Deploy.0 = Release|ARM
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|x64.ActiveCfg = Release|x64
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|x64.Build.0 = Release|x64
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|x64.Deploy.0 = Release|x64
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|x86.ActiveCfg = Release|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|x86.Build.0 = Release|Win32
+		{7624C5C0-8919-4AC7-927F-24B8C9E272A3}.Release|x86.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
