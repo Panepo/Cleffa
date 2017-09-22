@@ -36,7 +36,7 @@ namespace testClefable
             
         }
 
-        private async void btn_Click(object sender, RoutedEventArgs e)
+        private async void inputButton_Click(object sender, RoutedEventArgs e)
         {
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.Thumbnail;
@@ -54,12 +54,8 @@ namespace testClefable
                     WriteableBitmap bmp = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
                     bmp.SetSource(stream);
 
-                    //Clefable.barcodeFilter bf = new Clefable.barcodeFilter();
-
-                    image.Source = bmp;
-
-                    //btn.Content = Clefable.barcodeFilter.add(3, 5).ToString();
-                    //image2.Source = Clefable.barcodeFilter.processFilterTest(bmp);
+                    image1.Source = bmp;
+                    image2.Source = Clefable.barcodeFilter.processFilterBitmap(bmp);
                 }
 
             }

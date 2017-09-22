@@ -15,20 +15,6 @@
     <ClInclude Include="barcodeFilter.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_calib3d300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_core300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_features2d300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_flann300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_imgcodecs300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_imgproc300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_ml300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_objdetect300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_photo300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_shape300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_stitching300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_video300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_videoio300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_videostab300.dll" />
-    <None Include="..\..\..\Data\opencvms\vs2015\WS\10.0\x64\bin\Release\opencv_winrt.dll" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

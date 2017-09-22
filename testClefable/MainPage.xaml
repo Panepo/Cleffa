@@ -5,11 +5,20 @@
     xmlns:local="using:testClefable"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Width="800" Height="600">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-362,0">
-        <Button Name="btn" Width="100" Height="100" Click="btn_Click" Content="FQ" Margin="35,10,0,530" />
-        <Image x:Name="image" HorizontalAlignment="Left" Height="500" Margin="100,96,0,0" VerticalAlignment="Top" Width="250"/>
-        <Image x:Name="image2" HorizontalAlignment="Left" Height="500" Margin="350,96,0,0" VerticalAlignment="Top" Width="250"/>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel x:Name="contentPanel" Margin="120,30,0,0">
+            <TextBlock HorizontalAlignment="Left" Text="Hello World" FontSize="36"/>
+            <TextBlock Text="What's your name?"/>
+            <StackPanel x:Name="inputPanel" Orientation="Horizontal" Margin="0,20,0,20">
+                <TextBox x:Name="nameInput" Width="300" HorizontalAlignment="Left"/>
+                <Button x:Name="inputButton" Content="Say Hello" Click="inputButton_Click"/>
+            </StackPanel>
+            <TextBlock x:Name="greetingOutput"/>
+            <Image x:Name="image1" HorizontalAlignment="Left" Margin="0,20,0,20" Height="300" Width="200"/>
+            <Image x:Name="image2" HorizontalAlignment="Left" Margin="250,-320,0,20" Height="300" Width="200"/>
+        </StackPanel>
+
     </Grid>
 </Page>

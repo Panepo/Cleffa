@@ -33,11 +33,10 @@ WriteableBitmap^ barcodeFilter::processFilterTest(WriteableBitmap^ input)
 
 Mat barcodeFilter::processFilter(Mat input)
 {
-	//Mat matGray = Mat(input.rows, input.cols, CV_8UC4);
-	//cvtColor(input, matGray, CV_BGR2BGRA);
+	Mat matGray = Mat(input.rows, input.cols, CV_8UC4);
+	cvtColor(input, matGray, CV_BGR2BGRA);
 	
-	return input;
-	//return matGray;
+	return matGray;
 }
 
 // =================================================================================
