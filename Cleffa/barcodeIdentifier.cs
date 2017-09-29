@@ -140,16 +140,8 @@ namespace Cleffa
         // =================================================================================
         // calculations
         // =================================================================================
-        [DllImport("Clefable.dll")]
-        private static extern double Add(double a, double b);
-
         public bool genDecode()
         {
-            double testA = 1;
-            double testB = 2;
-            double testC = Add(testA, testB);
-
-
             if (inputMat != null)
             {
                 Mat input = new Mat();
@@ -234,6 +226,15 @@ namespace Cleffa
                     reader.Options.TryHarder = false;
                     reader.AutoRotate = false;
 
+                    CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
+
+                    double minGray = 0, maxGray = 0;
+                    Point maxp = new Point(0, 0);
+                    Point minp = new Point(0, 0);
+                    CvInvoke.MinMaxLoc(input, ref minGray, ref maxGray, ref minp, ref maxp);
+
+                    input.ConvertTo(input, 0, 255 / (maxGray - minGray), -1 * minGray);
+
                     Bitmap inputBitmap = input.Bitmap;
                     result = reader.Decode(inputBitmap);
 
@@ -260,7 +261,7 @@ namespace Cleffa
                             }
                             else
                             {
-                                CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
+                                //CvInvoke.CvtColor(input, input, ColorConversion.Bgra2Gray);
                                 CvInvoke.CLAHE(input, 3.0, new Size(8, 8), input);
                                 inputBitmap = input.Bitmap;
                                 result = reader.Decode(inputBitmap);

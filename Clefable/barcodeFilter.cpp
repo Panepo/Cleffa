@@ -18,9 +18,15 @@ WriteableBitmap^ barcodeFilter::processFilterBitmap(WriteableBitmap^ input)
 Mat barcodeFilter::processFilter(Mat input)
 {
 	Mat matGray = Mat(input.rows, input.cols, CV_8UC4);
+	Mat matGrayC = Mat(input.rows, input.cols, CV_8UC1);
 	Mat matDst;
 	
 	cvtColor(input, matGray, CV_BGR2GRAY);
+
+	double minGray, maxGray;
+	minMaxLoc(matGray, &minGray, &maxGray);
+
+	matGray.convertTo(matDst, CV_8U, 255 / (maxGray - minGray), -1 * minGray);
 
 	Ptr<CLAHE> clahe = createCLAHE();
 	clahe->setClipLimit(4);
