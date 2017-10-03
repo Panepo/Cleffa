@@ -25,9 +25,14 @@ public:
 	}
 
 	void processImage(Mat& img) {
-		Mat gray; cvtColor(img, gray, CV_BGR2GRAY);
+		Mat gray;
+		cvtColor(img, gray, CV_BGR2GRAY);
+
+		//int startX = 200, startY = 200, width = 100, height = 100;
+		//Mat ROI(gray, Rect(startX, startY, width, height));
+
 		vector<Point2f> corners;
-		if (trackedFeatures.size() < 200) {
+		if (trackedFeatures.size() < 250) {
 			goodFeaturesToTrack(gray, corners, 300, 0.01, 10);
 			cout << "found " << corners.size() << " features\n";
 			for (int i = 0; i < corners.size(); ++i) {
@@ -64,7 +69,7 @@ public:
 		}
 
 		for (int i = 0; i < trackedFeatures.size(); ++i) {
-			circle(img, trackedFeatures[i], 3, Scalar(0, 0, 255), CV_FILLED);
+			circle(img, trackedFeatures[i], 3, Scalar(0, 255, 0), CV_FILLED);
 		}
 
 		gray.copyTo(prevGray);
@@ -73,9 +78,11 @@ public:
 
 
 int main() {
-	VideoCapture vc;
+	VideoCapture vc(2);
 
-	vc.open(2);
+	vc.set(CAP_PROP_FRAME_WIDTH, 1920);
+	vc.set(CAP_PROP_FRAME_HEIGHT, 1080);	
+
 	Mat frame, orig, orig_warped, tmp;
 
 	Tracker tracker;
@@ -85,21 +92,27 @@ int main() {
 		if (frame.empty()) break;
 		frame.copyTo(orig);
 
+		//Mat output;
+		//resize(orig, output, Size(), 0.5, 0.5);
+		//imshow("Original", output);
+
 		tracker.processImage(orig);
 
 		Mat invTrans = tracker.rigidTransform.inv(DECOMP_SVD);
 		warpAffine(orig, orig_warped, invTrans.rowRange(0, 2), Size());
 
-		imshow("orig", orig_warped);
+		Mat output_warped;
+		resize(orig_warped, output_warped, Size(), 0.5, 0.5);
+		imshow("Clefavle Stablizer", output_warped);
 
-		int c = waitKey(10);
-		if (c == ' ') {
-			if (waitKey() == 27) break;
-		}
-		else
-			if (c == 27) break;
+		int getKey = waitKey(10);
+		if (getKey == 27)
+			break;
+		else if (getKey == ' ')
+			break;
+		else if (getKey == 'q')
+			break;
 	}
 	vc.release();
 
 }
-
